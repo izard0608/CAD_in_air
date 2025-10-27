@@ -11,7 +11,7 @@
         <!-- 顶部控制栏 -->
         <header class="control-bar">
             <div class="logo">
-                <h1>🎮 手势3D建模系统</h1>
+                <h1>手势3D建模系统</h1>
             </div>
             <div class="controls">
                 <button id="btn-start" class="btn btn-primary">开始建模</button>
@@ -35,7 +35,7 @@
             <!-- 左侧：摄像头画面和基本信息 -->
             <div class="left-panel">
                 <div class="camera-container">
-                    <h3>📷 实时摄像头画面</h3>
+                    <h3>实时摄像头画面</h3>
                     <div class="camera-feed">
                         <video id="camera-video" autoplay muted playsinline></video>
                         <div id="camera-overlay" class="camera-overlay">
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="info-panel">
-                    <h3>📊 系统信息</h3>
+                    <h3>系统信息</h3>
                     <div class="info-grid">
                         <div class="info-item">
                             <label>数据包:</label>
@@ -70,7 +70,7 @@
             <!-- 右侧：3D建模界面 -->
             <div class="right-panel">
                 <div class="modeling-container">
-                    <h3>🛠️ 3D建模界面</h3>
+                    <h3>3D建模界面</h3>
                     <div id="modeling-scene" class="modeling-scene">
                         <!-- Three.js画布将在这里渲染 -->
                         <div class="scene-overlay">
@@ -82,20 +82,6 @@
                     </div>
                     
                     <!-- 建模工具面板 -->
-                    <div class="tool-panel">
-                        <div class="tool-group">
-                            <button class="tool-btn" data-tool="select">✋ 选择</button>
-                            <button class="tool-btn" data-tool="move">↔️ 移动</button>
-                            <button class="tool-btn" data-tool="rotate">🔄 旋转</button>
-                            <button class="tool-btn" data-tool="scale">📏 缩放</button>
-                        </div>
-                        <div class="tool-group">
-                            <button class="tool-btn" data-tool="cube">⬜ 立方体</button>
-                            <button class="tool-btn" data-tool="sphere">🔵 球体</button>
-                            <button class="tool-btn" data-tool="cylinder">🟪 圆柱</button>
-                            <button class="tool-btn" data-tool="line">📐 线条</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>
@@ -126,7 +112,7 @@
 
     <!-- 测试面板 -->
 <div id="test-panel" style="position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.9); color: white; padding: 15px; border-radius: 8px; z-index: 1000; font-size: 12px;">
-    <h4 style="margin: 0 0 10px 0;">🧪 3D功能测试</h4>
+    <h4 style="margin: 0 0 10px 0;">3D功能测试</h4>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px;">
         <button onclick="testCreatePoint()">画点</button>
         <button onclick="testStartDrawing()">开始画线</button>

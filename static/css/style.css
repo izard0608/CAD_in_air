@@ -313,3 +313,10 @@ body {
         height: 400px;
     }
 }
+
+.camera-container h3,
+.info-panel h3, 
+.modeling-container h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
