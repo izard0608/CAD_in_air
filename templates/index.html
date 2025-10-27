@@ -1,15 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>My first three.js app</title>
-    <style>
-      body { margin: 0; }
-    </style>
-  </head>
-  <body>
-        <script src="/static/js/three.js" defer></script>
-        <script src="/static/js/main.js" defer></script>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时手势3D建模系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部控制栏 -->
+        <header class="control-bar">
+            <div class="logo">
+                <h1>🎮 手势3D建模系统</h1>
+            </div>
+            <div class="controls">
+                <button id="btn-start" class="btn btn-primary">开始建模</button>
+                <button id="btn-stop" class="btn btn-danger" disabled>结束建模</button>
+                <button id="btn-reset" class="btn btn-secondary">重置场景</button>
+            </div>
+            <div class="status-indicators">
+                <div class="status-item">
+                    <span class="status-label">连接状态:</span>
+                    <span id="connection-status" class="status-offline">离线</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">建模状态:</span>
+                    <span id="modeling-status" class="status-inactive">未开始</span>
+                </div>
+            </div>
+        </header>
 
-  </body>
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 左侧：摄像头画面和基本信息 -->
+            <div class="left-panel">
+                <div class="camera-container">
+                    <h3>📷 实时摄像头画面</h3>
+                    <div class="camera-feed">
+                        <video id="camera-video" autoplay muted playsinline></video>
+                        <div id="camera-overlay" class="camera-overlay">
+                            <div class="overlay-text">等待摄像头连接...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <h3>📊 系统信息</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>数据包:</label>
+                            <span id="packet-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>延迟:</label>
+                            <span id="latency">0ms</span>
+                        </div>
+                        <div class="info-item">
+                            <label>FPS:</label>
+                            <span id="fps">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>手势状态:</label>
+                            <span id="gesture-state">等待数据...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：3D建模界面 -->
+            <div class="right-panel">
+                <div class="modeling-container">
+                    <h3>🛠️ 3D建模界面</h3>
+                    <div id="modeling-scene" class="modeling-scene">
+                        <!-- Three.js画布将在这里渲染 -->
+                        <div class="scene-overlay">
+                            <div class="overlay-content">
+                                <h4>3D建模画布</h4>
+                                <p>建模会话开始后，这里将显示实时3D模型</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 建模工具面板 -->
+                    <div class="tool-panel">
+                        <div class="tool-group">
+                            <button class="tool-btn" data-tool="select">✋ 选择</button>
+                            <button class="tool-btn" data-tool="move">↔️ 移动</button>
+                            <button class="tool-btn" data-tool="rotate">🔄 旋转</button>
+                            <button class="tool-btn" data-tool="scale">📏 缩放</button>
+                        </div>
+                        <div class="tool-group">
+                            <button class="tool-btn" data-tool="cube">⬜ 立方体</button>
+                            <button class="tool-btn" data-tool="sphere">🔵 球体</button>
+                            <button class="tool-btn" data-tool="cylinder">🟪 圆柱</button>
+                            <button class="tool-btn" data-tool="line">📐 线条</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部状态栏 -->
+        <footer class="status-bar">
+            <div class="status-left">
+                <span>会话ID: <span id="session-id">未开始</span></span>
+            </div>
+            <div class="status-center">
+                <span id="operation-hint">请点击"开始建模"按钮启动手势识别</span>
+            </div>
+            <div class="status-right">
+                <span>连接客户端: <span id="client-count">0</span></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Three.js 库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Socket.io 客户端 -->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    
+    <!-- 项目JS文件 -->
+    <script src="{{ url_for('static', filename='js/websocket-client.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/three-scene.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- 测试面板 -->
+<div id="test-panel" style="position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.9); color: white; padding: 15px; border-radius: 8px; z-index: 1000; font-size: 12px;">
+    <h4 style="margin: 0 0 10px 0;">🧪 3D功能测试</h4>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px;">
+        <button onclick="testCreatePoint()">画点</button>
+        <button onclick="testStartDrawing()">开始画线</button>
+        <button onclick="testUpdateDrawing()">更新画线</button>
+        <button onclick="testFinishDrawing()">完成画线</button>
+        <button onclick="testCreateRectangle()">画长方形</button>
+        <button onclick="testCreateCube()">创建立方体</button>
+        <button onclick="startDynamicLineTest()">开始动态画线测试</button>
+        <button onclick="stopDynamicLineTest()">停止测试</button>
+    </div>
+    <div style="display: flex; gap: 5px;">
+        <label>X: <input type="number" id="test-x" value="0" step="0.5" style="width: 40px;"></label>
+        <label>Y: <input type="number" id="test-y" value="0" step="0.5" style="width: 40px;"></label>
+        <label>Z: <input type="number" id="test-z" value="0" step="0.5" style="width: 40px;"></label>
+    </div>
+</div>
+
+<script>
+// 测试函数
+function getTestPosition() {
+    return [
+        parseFloat(document.getElementById('test-x').value) || 0,
+        parseFloat(document.getElementById('test-y').value) || 0,
+        parseFloat(document.getElementById('test-z').value) || 0
+    ];
+}
+
+function testCreatePoint() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        // 直接调用ThreeScene，不经过WebSocket
+        window.app.threeScene.createPoint({ 
+            position: position,
+            color: 0xffff00 
+        });
+        console.log('测试: 画点', position);
+    } else {
+        console.error('ThreeScene未初始化');
+    }
+}
+
+function testStartDrawing() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        window.app.threeScene.startDrawingLine({ 
+            position: position 
+        });
+        console.log('测试: 开始画线', position);
+    }
+}
+
+function testUpdateDrawing() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        window.app.threeScene.updateDrawingLine({ 
+            position: position 
+        });
+        console.log('测试: 更新画线', position);
+    }
+}
+
+function testFinishDrawing() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        window.app.threeScene.finishDrawingLine({ 
+            position: position 
+        });
+        console.log('测试: 完成画线', position);
+    }
+}
+
+function testCreateRectangle() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        window.app.threeScene.createRectangle({
+            normal: [0, 1, 0],
+            corner1: [position[0]-1, position[1], position[2]-0.5],
+            corner2: [position[0]+1, position[1], position[2]+0.5],
+            color: 0x3498db
+        });
+        console.log('测试: 画长方形', position);
+    }
+}
+
+function testCreateCube() {
+    const position = getTestPosition();
+    if (window.app && window.app.threeScene) {
+        window.app.threeScene.createCube({ 
+            position: position,
+            size: 0.5
+        });
+        console.log('测试: 创建立方体', position);
+    }
+}
+
+let dynamicTestInterval = null;
+let testLine = null;
+let testStartPoint = null;
+
+function startDynamicLineTest() {
+    if (dynamicTestInterval) {
+        clearInterval(dynamicTestInterval);
+    }
+    
+    // 创建固定起点
+    testStartPoint = [0, 0, 0];
+    window.app.threeScene.createPoint({ 
+        position: testStartPoint, 
+        color: 0x00ff00,
+        name: 'fixed_start_point'
+    });
+    
+    // 创建动态线条
+    testLine = window.app.threeScene.createDynamicLine();
+    
+    let angle = 0;
+    const radius = 3;
+    
+    dynamicTestInterval = setInterval(() => {
+        angle += 0.1;
+        
+        // 计算动态终点位置（圆周运动）
+        const endX = Math.cos(angle) * radius;
+        const endZ = Math.sin(angle) * radius;
+        const endPosition = [endX, 1, endZ];
+        
+        // 更新线条
+        const points = [
+            new THREE.Vector3(...testStartPoint),
+            new THREE.Vector3(...endPosition)
+        ];
+        window.app.threeScene.updateDynamicLine(testLine, points);
+        
+        // 更新坐标显示
+        document.getElementById('test-x').value = endX.toFixed(2);
+        document.getElementById('test-z').value = endZ.toFixed(2);
+        
+    }, 50); // 20fps更新
+}
+
+function stopDynamicLineTest() {
+    if (dynamicTestInterval) {
+        clearInterval(dynamicTestInterval);
+        dynamicTestInterval = null;
+    }
+    if (testLine) {
+        window.app.threeScene.scene.remove(testLine);
+        testLine = null;
+    }
+}
+
+// 让app在全局可访问
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new GestureModelingApp();
+});
+</script>
+</body>
 </html>
