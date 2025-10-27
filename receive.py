@@ -79,9 +79,9 @@ socket.connect("tcp://127.0.0.1:5555")
 print(f"Begin to receive data...")
 
 edge_flag=0
-left_history=deque(MAXLEN)
-right_history=deque(MAXLEN)
-degree_history=deque(MAXLEN)
+left_history=deque(maxlen=MAXLEN)
+right_history=deque(maxlen=MAXLEN)
+degree_history=deque(maxlen=MAXLEN)
 
 while True:
     data=socket.recv_pyobj()
