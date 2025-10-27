@@ -5,6 +5,7 @@
 import zmq
 import time
 import math
+import numpy as np
 from collections import deque
 
 # 左手大拇指（从指尖编号）： 0，1，2
@@ -42,6 +43,33 @@ def vector_angle(p1,p2):
     cos_theta=dot/(norm_p1*norm_p2)
     cos_theta=max(-1.0,min(1.0,cos_theta))
     return math.degrees(math.acos(cos_theta))
+
+# 求直线的单位向量
+def unit(v):
+    n=np.linalg.norm(v)
+    return v/n
+
+# 求平面法向量
+def normal_vector(a,b):
+    a=np.asarray(a,dtype=float)
+    b=np.asarray(b,dtype=float)
+    ua=unit(a)
+    ub=unit(b)
+    nP=np.cross(a,b)
+    if np.linalg.norm(nP)==0:
+        return [0.0,0.0,0.0]
+    v=ua-ub
+    nQ=np.cross(nP,v)
+    return nQ/np.linalg.norm(nQ)
+
+# 求点到面上投影
+def point_to_plane(x,p0,n):
+    n=np.asarray(n,dtype=float)
+    x=np.asarray(x,dtype=float)
+    p0=np.asarray(p0,dtype=float)
+    n_norm2=np.dot(n,n)
+    t=np.dot(x-p0,n)/n_norm2
+    return x-t*n
 
 context=zmq.Context()
 socket=context.socket(zmq.PULL)
@@ -98,10 +126,12 @@ while True:
                         # 以 start_node 为起点建一条新线段
                         start_node=[((p1[i]+p2[i])/2) for i in range(3)]
                         print(f"create a new edge from x={start_node[0]},y={start_node[1]},z={start_node[2]}")
+                        edge_flag=1
                     else:
                         # 以 end_node 为终点结束建立新线段
                         end_node=[((p1[i]+p2[i])/2) for i in range(3)]
                         print(f"end a new edge at x={end_node[0]},y={end_node[1]},z={end_node[2]}")
+                        edge_flag=0
                     right_history.clear()
         # 是否并且能否实时表示线段当前终点在哪？
         # if edge_flag==1:
@@ -127,4 +157,16 @@ while True:
                     d_min=min(dis)
                     if d_max-d_min<POSITION_THRESHOLD:
                         # 新建面
+                        lp1=[(points[LEFT_FORE_FINGER[1]][i]+points[LEFT_THUMB_FINGER[1]][i])/2 for i in range(3)]
+                        lp2=[(points[LEFT_FORE_FINGER[2]][i]+points[LEFT_THUMB_FINGER[2]][i])/2 for i in range(3)]
+                        rp1=[(points[RIGHT_FORE_FINGER[1]][i]+points[RIGHT_THUMB_FINGER[1]][i])/2 for i in range(3)]
+                        rp2=[(points[RIGHT_FORE_FINGER[2]][i]+points[RIGHT_THUMB_FINGER[2]][i])/2 for i in range(3)]
+                        nv=normal_vector([(lp1[i]-lp2[i]) for i in range(3)],[(rp1[i]-rp2[i]) for i in range(3)])
+                        if nv==[0.0,0.0,0.0]:
+                            nv=np.cross([(lp1[i]-lp2[i]) for i in range(3)],[(points[LEFT_FORE_FINGER[2]][i]-points[LEFT_THUMB_FINGER[2]][i])for i in range(3)])
+                            nv=nv/np.linalg.norm(nv)
+                        p_start=lp2
+                        p_end=point_to_plane(rp2,p_start,nv)
+                        # 以 p_start 和 p_end 为对角线，nv 为法向量建立平面
+                        print(f"create a new plane from x={p_start[0]},y={p_start[1]},z={p_start[2]},to x={p_end[0]},y={p_end[1]},={p_end[2]},with normal vector x={nv[0]},y={nv[1]},z={nv[2]}")
                         degree_history.clear()
