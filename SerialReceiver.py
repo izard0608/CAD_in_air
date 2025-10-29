@@ -1,5 +1,5 @@
 '''
-required serial transmision format:
+required serial transmission format:
 
 <time stamp>
 <serial data line 1 to line 8>
@@ -43,7 +43,7 @@ while(True):
         continue
     
     for _ in range(8):  # read the 8*8 matrix
-        serial_input += ser.readline().decode('utf-8')
+        serial_input = ser.readline().decode('utf-8')
         data_list.append(serial_input)
 
     if len(data_list) == 8:  # send data
