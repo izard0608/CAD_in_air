@@ -1,4 +1,4 @@
-// static/js/three-scene.js
+// three-scene.js
 class ThreeScene {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -84,18 +84,20 @@ class ThreeScene {
         this.scene.add(axesHelper);
     }
 
-    // ==================== 你的三个核心功能 ====================
-
     /**
      * 1. 画点功能
      */
     createPoint(parameters = {}) {
+        console.log('🎯 createPoint方法被调用，参数:', parameters);
+        
         const {
             position = [0, 0, 0],
             color = 0xffff00,
             size = 0.1,
             name = `point_${Date.now()}`
         } = parameters;
+
+        console.log('🎯 解析后参数:', {position, color, size, name});
 
         // 用小球体表示点
         const geometry = new THREE.SphereGeometry(size, 16, 16);
@@ -108,9 +110,11 @@ class ThreeScene {
         this.scene.add(point);
         this.objects.set(name, point);
         
-        console.log(`创建点: ${name} 位置: [${position}]`);
+        console.log(`✅ 创建点成功: ${name} 位置: [${position}]`);
+        console.log('✅ 场景对象数量:', this.scene.children.length);
+        
         return point;
-    }
+}
 
     /**
      * 2. 开始画线（创建起点）
@@ -175,36 +179,48 @@ class ThreeScene {
         const { position = [0, 0, 0], color = 0xffffff } = parameters;
         const endPoint = new THREE.Vector3(...position);
 
-        // 创建终点（红色）
-        const finalEndPoint = this.createPoint({
-            position: position,
-            color: 0xff0000,
-            name: `end_point_${Date.now()}`
-        });
+        const EPS = 1e-4;
+        const isZeroLength = this.startPoint && this.startPoint.position.distanceTo(endPoint) < EPS;
 
-        // 创建最终线条
-        const finalLine = this.createLine({
-            points: [
-                this.startPoint.position.toArray(),
-                position
-            ],
-            color: color,
-            name: `line_${Date.now()}`
-        });
+        if (isZeroLength) {
+            // ✅ 线段长度≈0：把起点改成红色，不再创建新点，避免重叠闪烁
+            if (this.startPoint.material && this.startPoint.material.color) {
+                this.startPoint.material.color.set(0xff0000);
+            }
+            this.startPoint.name = `point_${Date.now()}`; // 可选：重命名成普通点
+        } else {
+            // 正常情况：创建红色终点
+            this.createPoint({
+                position: position,
+                color: 0xff0000,
+                name: `end_point_${Date.now()}`
+            });
+
+            // 创建最终线段
+            this.createLine({
+                points: [
+                    this.startPoint.position.toArray(),
+                    position
+                ],
+                color: color,
+                name: `line_${Date.now()}`
+            });
+        }
 
         // 清理动态预览线
         if (this.dynamicLine) {
             this.scene.remove(this.dynamicLine);
             this.dynamicLine = null;
         }
-        
+
         // 重置状态
         this.isDrawing = false;
         this.startPoint = null;
 
         console.log('完成画线');
-        return finalLine;
+        return true;
     }
+
 
     /**
      * 5. 取消画线
@@ -382,14 +398,18 @@ class ThreeScene {
     selectObject(objectName) {
         this.objects.forEach(obj => {
             if (obj.userData && obj.userData.isSelected) {
-                obj.material.emissive.set(0x000000);
+                if (obj.material && 'emissive' in obj.material) {
+   obj.material.emissive.set(0x000000);
+  }
                 obj.userData.isSelected = false;
             }
         });
         
         const object = this.objects.get(objectName);
         if (object) {
-            object.material.emissive.set(0x444444);
+            if (object.material && 'emissive' in object.material) {
+    object.material.emissive.set(0x444444);
+  }
             object.userData.isSelected = true;
             return object;
         }

@@ -1,3 +1,4 @@
+# main.py
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -173,6 +174,29 @@ def validate_gesture_data(data):
 @app.route('/health')
 def health_check():
     return jsonify({'status': 'healthy', 'timestamp': time.time()})
+
+@app.route('/api/check-reset', methods=['GET'])
+def check_reset():
+    """前端页面加载时检查并重置会话"""
+    # 如果当前没有客户端连接但建模状态为True，说明是孤立会话，需要重置
+    if app_state.connected_clients == 0 and app_state.is_modeling:
+        old_session = app_state.current_session
+        app_state.is_modeling = False
+        app_state.current_session = None
+        logger.info(f"重置孤立的建模会话: {old_session}")
+        
+        return jsonify({
+            'reset': True,
+            'old_session': old_session,
+            'message': '已重置孤立会话'
+        })
+    
+    return jsonify({
+        'reset': False,
+        'is_modeling': app_state.is_modeling,
+        'connected_clients': app_state.connected_clients,
+        'message': '状态正常'
+    })
 
 if __name__ == '__main__':
     logger.info("启动手势3D建模服务器...")

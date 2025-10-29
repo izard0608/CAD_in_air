@@ -1,7 +1,18 @@
+// main.js
 class CameraManager {
     constructor() {
-        this.stream = null;
-        this.isActive = false;
+        // this.cameraManager = new CameraManager();
+        // this.cameraManager = new CameraManager();
+        this.websocketClient = new WebSocketClient();
+        this.threeScene = null;
+        this.isModeling = false;
+        this.currentSession = null;
+        
+        // 正确设置调试引用
+        window.appInstance = this;
+        console.log('🟢 调试模式已启用，使用 appInstance 访问应用实例');
+        
+        // this.init();
     }
     
     async startCamera() {
@@ -69,7 +80,20 @@ class GestureModelingApp {
         this.init();
     }
     
-    init() {
+    async init() {
+    // 页面加载时检查并重置后端状态
+        try {
+            const response = await fetch('/api/check-reset');
+            const status = await response.json();
+            console.log('后端状态检查:', status);
+            
+            if (status.reset) {
+                console.log('✅ 后端状态已重置');
+            }
+        } catch (error) {
+            console.warn('状态检查失败:', error);
+        }
+        
         // 初始化UI事件
         this.setupUIEvents();
         
@@ -82,25 +106,39 @@ class GestureModelingApp {
         // 设置WebSocket事件监听
         this.setupWebSocketEvents();
         
-        // 初始化摄像头
-        this.initCamera();
-        
         console.log('🎮 手势3D建模应用初始化完成');
     }
     
     setupUIEvents() {
-        // 建模控制按钮
-        document.getElementById('btn-start').addEventListener('click', () => {
+    // 先移除所有事件监听器，防止重复绑定
+        const startBtn = document.getElementById('btn-start');
+        const stopBtn = document.getElementById('btn-stop');
+        const resetBtn = document.getElementById('btn-reset');
+        
+        startBtn.replaceWith(startBtn.cloneNode(true));
+        stopBtn.replaceWith(stopBtn.cloneNode(true));
+        resetBtn.replaceWith(resetBtn.cloneNode(true));
+        
+        // 重新获取元素
+        const newStartBtn = document.getElementById('btn-start');
+        const newStopBtn = document.getElementById('btn-stop');
+        const newResetBtn = document.getElementById('btn-reset');
+        
+        // 建模控制按钮 - 只绑定一次
+        newStartBtn.addEventListener('click', () => {
+            console.log('🟢 开始建模按钮被点击');
             this.startModeling();
-        });
+        }, { once: false });
         
-        document.getElementById('btn-stop').addEventListener('click', () => {
+        newStopBtn.addEventListener('click', () => {
+            console.log('🔴 停止建模按钮被点击');
             this.stopModeling();
-        });
+        }, { once: false });
         
-        document.getElementById('btn-reset').addEventListener('click', () => {
+        newResetBtn.addEventListener('click', () => {
+            console.log('🔄 重置场景按钮被点击');
             this.resetScene();
-        });
+        }, { once: false });
         
         // 工具按钮
         document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -118,6 +156,11 @@ class GestureModelingApp {
     }
     
     setupWebSocketEvents() {
+        console.log('🔧 设置WebSocket事件监听');
+    
+        // 检查所有注册的事件
+        console.log('🔧 设置WebSocket事件监听');
+    
         // 连接状态事件
         this.websocketClient.on('connectionEstablished', (data) => {
             this.updateClientCount(data.connected_clients);
@@ -132,17 +175,10 @@ class GestureModelingApp {
             this.onModelingStopped(data);
         });
         
-        // 手势数据事件
+        // 手势数据事件 - 只保留这一个正确的监听
         this.websocketClient.on('gestureUpdate', (data) => {
+            console.log('🎯 收到手势命令:', data);
             this.handleGestureCommand(data);
-        });
-        
-        this.websocketClient.on('handUpdate', (data) => {
-            this.handleHandCoordinates(data);
-        });
-        
-        this.websocketClient.on('binaryHandUpdate', (binaryData) => {
-            this.handleBinaryHandData(binaryData);
         });
         
         // 错误处理
@@ -152,14 +188,20 @@ class GestureModelingApp {
     }
     
     async startModeling() {
-        await this.cameraManager.startCamera();
+        console.log('🟢 startModeling 方法开始执行');
+        
+        if (this.isModeling) {
+            console.log('❌ 建模已在进行中，跳过');
+            return;
+        }
+        
+        console.log('🟢 跳过摄像头，直接开始建模');
+        
         try {
             const response = await fetch('/api/start-modeling', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({})  // 添加空的请求体
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({})
             });
             
             if (!response.ok) {
@@ -169,6 +211,9 @@ class GestureModelingApp {
             
             const data = await response.json();
             console.log('建模会话启动成功:', data);
+            
+            // 重要：设置建模状态
+            this.isModeling = true;
             
         } catch (error) {
             console.error('启动建模失败:', error);
@@ -224,27 +269,49 @@ class GestureModelingApp {
     }
     
     handleGestureCommand(data) {
-        if (!this.isModeling) return;
-        
-        console.log('收到手势命令:', data);
-        
-        // 直接调用ThreeScene，不经过复杂的逻辑
-        switch(data.command) {
-            case 'start_drawing_point':
-                this.threeScene.startDrawingLine(data.parameters);
-                break;
-            case 'update_drawing_line':
-                this.threeScene.updateDrawingLine(data.parameters);
-                break;
-            case 'finish_drawing_line':
-                this.threeScene.finishDrawingLine(data.parameters);
-                break;
-            case 'create_rectangle':
-                this.threeScene.createRectangle(data.parameters);
-                break;
-            default:
-                console.log('未知命令:', data.command);
-        }
+    console.log('🟢 测试：handleGestureCommand 被调用了！');
+    if (!this.isModeling) return;
+    
+    console.log('🔍 收到手势命令:', data);
+    console.log('🔍 当前建模状态:', this.isModeling);
+    console.log('🔍 ThreeScene对象:', this.threeScene);
+    console.log('🔍 createPoint方法:', this.threeScene.createPoint);
+    
+    switch(data.command) {
+        case 'start_drawing_point':
+            console.log('🎯 处理创建点命令:', data.parameters);
+            try {
+                this.threeScene.createPoint(data.parameters);
+                console.log('✅ 点创建方法调用成功');
+            } catch (error) {
+                console.error('❌ 点创建失败:', error);
+            }
+            break;
+        case 'start_drawing_line':
+            this.threeScene.startDrawingLine(data.parameters);
+            break;
+        case 'update_drawing_line':
+            this.threeScene.updateDrawingLine(data.parameters);
+            break;
+        case 'finish_drawing_line':
+            this.threeScene.finishDrawingLine(data.parameters);
+            break;
+        case 'create_rectangle':
+            this.threeScene.createRectangle(data.parameters);
+            break;
+        case 'create_plane':
+   // 后端发的是 { start_position, end_position, normal_vector }
+            this.threeScene.createRectangle({
+                corner1: data.parameters.start_position,
+                corner2: data.parameters.end_position,
+                normal: data.parameters.normal_vector,
+                color: 0x3498db,
+                opacity: 0.7
+            });
+            break;
+        default:
+            console.log('未知命令:', data.command);
+    }
 }
     
     handleHandCoordinates(data) {
@@ -410,6 +477,7 @@ let app;
 
 document.addEventListener('DOMContentLoaded', () => {
     app = new GestureModelingApp();
+    window.app = app; // 统一：测试面板与事件用同一个实例
 });
 
 // 页面卸载时清理资源
@@ -418,3 +486,4 @@ window.addEventListener('beforeunload', () => {
         app.destroy();
     }
 });
+

@@ -1,3 +1,4 @@
+#receive.py
 import zmq
 import time
 import math
@@ -53,6 +54,7 @@ class GestureBackend:
         def disconnect():
             print("Disconnected from server")
 
+
     def connect(self):
         try:
             self.sio.connect(self.server_url)
@@ -62,11 +64,26 @@ class GestureBackend:
             return False
 
     def send_command(self, command_type, parameters):
-        data = {
-            'command': command_type,
-            'parameters': parameters,
-            'timestamp': time.time()
-        }
+        if command_type == 'start_drawing_point':
+            data = {
+                'type': 'command',
+                'command': command_type,
+                'parameters': {
+                    'position': parameters['position'],
+                    'color': 0xff0000,  # 红色
+                    'size': 0.05,       # 大小
+                    'name': f"point_{int(time.time()*1000)}"
+                },
+                'timestamp': time.time()
+            }
+        else:
+            data = {
+                'type': 'command',
+                'command': command_type,
+                'parameters': parameters,
+                'timestamp': time.time()
+            }
+        
         self.sio.emit('gesture_command', data)
 
     # 欧式距离
@@ -131,7 +148,7 @@ class GestureBackend:
                     if d_max-d_min<self.POSITION_THRESHOLD and d_max<=self.DIS_THRESHOLD:
                         # 在 new_node 建一个新点
                         new_node=[((p1[i]+p2[i])/2) for i in range(3)]
-                        self.send_command('create_point', {'position': new_node})
+                        self.send_command('start_drawing_point', {'position': new_node})
                         self.left_history.clear()
         p1=points[self.RIGHT_THUMB_FINGER[0]]
         p2=points[self.RIGHT_FORE_FINGER[0]]
@@ -152,12 +169,12 @@ class GestureBackend:
                         if self.edge_flag==0:
                             # 以 start_node 为起点建一条新线段
                             start_node=[((p1[i]+p2[i])/2) for i in range(3)]
-                            self.send_command('start_line', {'position': start_node})
+                            self.send_command('start_drawing_line', {'position': start_node})
                             self.edge_flag=1
                         else:
                             # 以 end_node 为终点结束建立新线段
                             end_node=[((p1[i]+p2[i])/2) for i in range(3)]
-                            self.send_command('end_line', {'position': end_node})
+                            self.send_command('finish_drawing_line', {'position': end_node})
                             self.edge_flag=0
                         self.right_history.clear()
             # 是否并且能否实时表示线段当前终点在哪？
@@ -251,5 +268,18 @@ if __name__ == "__main__":
             context=zmq.Context()
             socket=context.socket(zmq.PULL)
             socket.connect("tcp://127.0.0.1:5555")
+            try:
+                while True:
+                    data=socket.recv_pyobj()
+                    backend.process_data(data)
+            except KeyboardInterrupt:
+                print("Stopped receiving data")
+                
         elif choice == "2":
             backend.start_simulation()
+            # 添加这个循环来保持程序运行
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                print("Stopped simulation")

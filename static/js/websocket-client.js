@@ -1,3 +1,4 @@
+// websocket.js
 class WebSocketClient {
     constructor() {
         this.socket = null;
@@ -103,15 +104,23 @@ class WebSocketClient {
         this.eventHandlers.get(event).push(handler);
     }
     
+    // 在 WebSocketClient 的 emit 方法中添加
     emit(event, data) {
+        console.log(`📤 WebSocketClient 触发事件: ${event}`, data);
+        
         if (this.eventHandlers.has(event)) {
-            this.eventHandlers.get(event).forEach(handler => {
+            const handlers = this.eventHandlers.get(event);
+            console.log(`📤 找到 ${handlers.length} 个处理器`);
+            
+            handlers.forEach(handler => {
                 try {
                     handler(data);
                 } catch (error) {
                     console.error(`事件处理错误 (${event}):`, error);
                 }
             });
+        } else {
+            console.log(`❌ 没有找到 ${event} 事件的处理器`);
         }
     }
     
