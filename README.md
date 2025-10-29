@@ -4,5 +4,5 @@
 串口接收和zmq发送完成，端口号5555
 ## zmq发包
 ### 格式：
-<timestamp>
-<8*8 matrix>
+line 1:     <time>
+line 2-10:  <8*8 matrix>
