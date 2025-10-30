@@ -309,46 +309,125 @@ class ThreeScene {
     /**
      * 9. 画长方形
      */
+    // three-scene.js 里替换整个 createRectangle(...)
     createRectangle(parameters = {}) {
-        const {
-            normal = [0, 1, 0],
-            corner1 = [0, 0, 0],
-            corner2 = [1, 0, 1],
-            color = 0x3498db,
-            opacity = 0.7,
-            name = `rectangle_${Date.now()}`
-        } = parameters;
+    const {
+        normal = [0, 1, 0],     // 平面法向（后端给）
+        corner1 = [0, 0, 0],    // 对角点1（后端给，必须严格使用）
+        corner2 = [1, 0, 1],    // 对角点2（后端给，必须严格使用）
+        color = 0x3498db,
+        opacity = 0.7,
+        name = `rectangle_${Date.now()}`
+    } = parameters;
 
-        // 计算中心点
-        const center = [
-            (corner1[0] + corner2[0]) / 2,
-            (corner1[1] + corner2[1]) / 2,
-            (corner1[2] + corner2[2]) / 2
-        ];
+    // === 基础向量 ===
+    const c1 = new THREE.Vector3().fromArray(corner1);
+    const c2 = new THREE.Vector3().fromArray(corner2);
+    const n  = new THREE.Vector3().fromArray(normal).normalize();
 
-        // 计算宽度和高度
-        const width = Math.abs(corner2[0] - corner1[0]);
-        const height = Math.abs(corner2[2] - corner1[2]);
+    const center = new THREE.Vector3().addVectors(c1, c2).multiplyScalar(0.5);
+    const d = new THREE.Vector3().subVectors(c2, c1); // 对角向量
+    const len = d.length();
 
-        // 创建立方体几何体
-        const geometry = new THREE.BoxGeometry(width, 0.01, height);
-        const material = new THREE.MeshBasicMaterial({ 
-            color: color,
-            transparent: true,
-            opacity: opacity,
-            side: THREE.DoubleSide
-        });
-
-        const rectangle = new THREE.Mesh(geometry, material);
-        rectangle.position.set(...center);
-        rectangle.name = name;
-        
-        this.scene.add(rectangle);
-        this.objects.set(name, rectangle);
-
-        console.log(`创建长方形: ${name}, 角点: [${corner1}] - [${corner2}]`);
-        return rectangle;
+    if (!isFinite(len) || len < 1e-6 || !isFinite(n.length()) || n.length() < 1e-6) {
+        console.warn("createRectangle: degenerate input", { len, n: n.toArray() });
+        return null;
     }
+
+    const dHat = d.clone().normalize();
+
+    // 在平面内找与 dHat 垂直的单位向量 pHat
+    let pHat = new THREE.Vector3().crossVectors(n, dHat);
+    const pLen = pHat.length();
+    if (pLen < 1e-8) {
+        // 退化保护：如果 n 与 d 平行（理论上不该发生），随便找个不共线向量
+        pHat = Math.abs(n.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+        pHat.crossVectors(n, pHat).normalize();
+    } else {
+        pHat.normalize();
+    }
+
+    // 在平面内把边轴设置为“相对对角线 ±45°”
+    // a = rotate(dHat, +45°), b = rotate(dHat, -45°)
+    const cos45 = Math.SQRT1_2;  // 1/√2
+    const sin45 = Math.SQRT1_2;
+    const a = new THREE.Vector3().addVectors(
+        dHat.clone().multiplyScalar(cos45),
+        pHat.clone().multiplyScalar(sin45)
+    ).normalize();
+    const b = new THREE.Vector3().addVectors(
+        dHat.clone().multiplyScalar(cos45),
+        pHat.clone().multiplyScalar(-sin45)
+    ).normalize();
+
+    // 为了让对角点精确等于 c1/c2，需要：
+    // center ± (w/2 * a + h/2 * b) = center ± d/2
+    // 选 θ=45° 且 w=h，可得 w = h = |d|/√2
+    const w = len / Math.SQRT2;
+    const h = len / Math.SQRT2;
+
+    const ha = a.clone().multiplyScalar(w * 0.5);
+    const hb = b.clone().multiplyScalar(h * 0.5);
+
+    // 四个顶点（确保 c1/c2 精确为对角点）
+    // v2 = center + ha + hb  应该等于 c2
+    // v0 = center - ha - hb  应该等于 c1
+    const v0 = center.clone().sub(ha).sub(hb); // 应等于 c1
+    const v1 = center.clone().sub(ha).add(hb);
+    const v2 = center.clone().add(ha).add(hb); // 应等于 c2
+    const v3 = center.clone().add(ha).sub(hb);
+
+    // 用自定义四边形（两个三角形）来建几何，避免 PlaneGeometry 的角落不对齐
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array([
+        v0.x, v0.y, v0.z,
+        v1.x, v1.y, v1.z,
+        v2.x, v2.y, v2.z,
+        v3.x, v3.y, v3.z
+    ]);
+    const indices = new Uint16Array([
+        0, 1, 2,  // 三角1
+        0, 2, 3   // 三角2
+    ]);
+
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setIndex(new THREE.BufferAttribute(indices, 1));
+    geo.computeVertexNormals(); // 直接用拓扑法线；如要强行用 n，可覆写法线属性
+
+    const mat = new THREE.MeshStandardMaterial({
+        color,
+        transparent: true,
+        opacity,
+        side: THREE.DoubleSide
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.name = name;
+
+    this.scene.add(mesh);
+    this.objects.set(name, mesh);
+
+    // 边框（更直观）
+    const edgesGeo = new THREE.EdgesGeometry(geo);
+    const edgesMat = new THREE.LineBasicMaterial({ color: 0xff0000 });
+    const edgeLines = new THREE.LineSegments(edgesGeo, edgesMat);
+    edgeLines.name = `${name}_edges`;
+    this.scene.add(edgeLines);
+    this.objects.set(edgeLines.name, edgeLines);
+
+    // 日志核验：c1/c2 是否被精确复原
+    const v0err = v0.distanceTo(c1);
+    const v2err = v2.distanceTo(c2);
+    console.log(`✅ createRectangle ok: ${name}`, {
+        center: center.toArray(),
+        normal: n.toArray(),
+        diag_len: len,
+        v0_to_c1_error: v0err,
+        v2_to_c2_error: v2err
+    });
+
+    return mesh;
+    }
+
 
     // ==================== 基础功能 ====================
 

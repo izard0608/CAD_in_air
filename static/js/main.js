@@ -98,6 +98,8 @@ class GestureModelingApp {
         
         // 初始化UI事件
         this.setupUIEvents();
+
+        await this.cameraManager.startCamera();
         
         // 初始化WebSocket连接
         this.websocketClient.connect();
