@@ -25,6 +25,8 @@ class CameraManager {
                 } 
             });
             
+            
+
             const videoElement = document.getElementById('camera-video');
             if (videoElement) {
                 videoElement.srcObject = this.stream;
