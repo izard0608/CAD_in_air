@@ -1,4 +1,4 @@
-# receive.py
+# receive.py (REPLACED)
 import zmq
 import time
 import math
@@ -453,27 +453,15 @@ if __name__ == "__main__":
         choice = input(" (1/2/3): ")
 
         if choice == "1":
-            import zmq, time
-
-            # --- 创建 ZMQ 上下文与 PULL socket ---
             context = zmq.Context()
-            socket = context.socket(zmq.PULL)
-
-            # --- 连接到发送端端口 ---
+            socket  = context.socket(zmq.PULL)
             socket.connect("tcp://127.0.0.1:5555")
-            print("✅ Connected to ZMQ at tcp://127.0.0.1:5555")
-
-            # --- 循环接收数据 ---
             try:
                 while True:
-                    data = socket.recv_pyobj()   # 从另一进程接收 Python 对象
-                    print(f"📩 Received data: {data}")
-                    backend.process_data(data)   # 把数据传给后端（GestureBackend）
+                    data = socket.recv_pyobj()
+                    backend.process_data(data)
             except KeyboardInterrupt:
-                print("⛔ Stopped receiving data")
-            finally:
-                socket.close()
-                context.term()
+                print("Stopped receiving data")
 
         elif choice == "2":
             backend.start_simulation()
