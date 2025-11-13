@@ -455,7 +455,7 @@ if __name__ == "__main__":
         if choice == "1":
             context = zmq.Context()
             socket  = context.socket(zmq.PULL)
-            socket.connect("tcp://127.0.0.1:5555")
+            socket.connect("tcp://127.0.0.1:5557")
             try:
                 while True:
                     data = socket.recv_pyobj()
