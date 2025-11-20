@@ -35,12 +35,26 @@
             <!-- 左侧：摄像头画面和基本信息 -->
             <div class="left-panel">
                 <div class="camera-container">
-                    <h3>实时摄像头画面</h3>
+                    <h3>实时手势画面</h3>
                     <div class="camera-feed">
-                        <video id="camera-video" autoplay muted playsinline></video>
-                        <div id="camera-overlay" class="camera-overlay">
-                            <div class="overlay-text">等待摄像头连接...</div>
+                        <!-- 使用 iframe 显示视频流 -->
+                        <iframe id="camera-video" 
+                                src="http://localhost:5001/video_feed"
+                                style="width: 100%; height: 360px; border: none; border-radius: 8px;"
+                                allow="camera">
+                        </iframe>
+                        <div id="camera-overlay" class="camera-overlay" style="display: none;">
+                            <div class="overlay-text">
+                                <div>📷 视频流连接中...</div>
+                                <button onclick="app.cameraManager.startCamera()" 
+                                        style="margin-top: 10px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    重新连接
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center; font-size: 12px; color: #666;">
+                        视频源: 后端摄像头处理程序 | 端口: 5001
                     </div>
                 </div>
 
@@ -80,8 +94,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- 建模工具面板 -->
                 </div>
             </div>
         </main>
@@ -111,159 +123,99 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
     <!-- 测试面板 -->
-<div id="test-panel" style="position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.9); color: white; padding: 15px; border-radius: 8px; z-index: 1000; font-size: 12px;">
-    <h4 style="margin: 0 0 10px 0;">3D功能测试</h4>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px;">
-        <button onclick="testCreatePoint()">画点</button>
-        <button onclick="testStartDrawing()">开始画线</button>
-        <button onclick="testUpdateDrawing()">更新画线</button>
-        <button onclick="testFinishDrawing()">完成画线</button>
-        <button onclick="testCreateRectangle()">画长方形</button>
-        <button onclick="testCreateCube()">创建立方体</button>
-        <button onclick="startDynamicLineTest()">开始动态画线测试</button>
-        <button onclick="stopDynamicLineTest()">停止测试</button>
+    <div id="test-panel" style="position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.9); color: white; padding: 15px; border-radius: 8px; z-index: 1000; font-size: 12px;">
+        <h4 style="margin: 0 0 10px 0;">3D功能测试</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px;">
+            <button onclick="testCreatePoint()">画点</button>
+            <button onclick="testStartDrawing()">开始画线</button>
+            <button onclick="testUpdateDrawing()">更新画线</button>
+            <button onclick="testFinishDrawing()">完成画线</button>
+            <button onclick="testCreateRectangle()">画长方形</button>
+            <button onclick="testCreateCube()">创建立方体</button>
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <label>X: <input type="number" id="test-x" value="0" step="0.5" style="width: 40px;"></label>
+            <label>Y: <input type="number" id="test-y" value="0" step="0.5" style="width: 40px;"></label>
+            <label>Z: <input type="number" id="test-z" value="0" step="0.5" style="width: 40px;"></label>
+        </div>
     </div>
-    <div style="display: flex; gap: 5px;">
-        <label>X: <input type="number" id="test-x" value="0" step="0.5" style="width: 40px;"></label>
-        <label>Y: <input type="number" id="test-y" value="0" step="0.5" style="width: 40px;"></label>
-        <label>Z: <input type="number" id="test-z" value="0" step="0.5" style="width: 40px;"></label>
-    </div>
-</div>
 
-<script>
-// 测试函数
-function getTestPosition() {
-    return [
-        parseFloat(document.getElementById('test-x').value) || 0,
-        parseFloat(document.getElementById('test-y').value) || 0,
-        parseFloat(document.getElementById('test-z').value) || 0
-    ];
-}
-
-function testCreatePoint() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        // 直接调用ThreeScene，不经过WebSocket
-        window.app.threeScene.createPoint({ 
-            position: position,
-            color: 0xffff00 
-        });
-        console.log('测试: 画点', position);
-    } else {
-        console.error('ThreeScene未初始化');
-    }
-}
-
-function testStartDrawing() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        window.app.threeScene.startDrawingLine({ 
-            position: position 
-        });
-        console.log('测试: 开始画线', position);
-    }
-}
-
-function testUpdateDrawing() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        window.app.threeScene.updateDrawingLine({ 
-            position: position 
-        });
-        console.log('测试: 更新画线', position);
-    }
-}
-
-function testFinishDrawing() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        window.app.threeScene.finishDrawingLine({ 
-            position: position 
-        });
-        console.log('测试: 完成画线', position);
-    }
-}
-
-function testCreateRectangle() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        window.app.threeScene.createRectangle({
-            normal: [0, 1, 0],
-            corner1: [position[0]-1, position[1], position[2]-0.5],
-            corner2: [position[0]+1, position[1], position[2]+0.5],
-            color: 0x3498db
-        });
-        console.log('测试: 画长方形', position);
-    }
-}
-
-function testCreateCube() {
-    const position = getTestPosition();
-    if (window.app && window.app.threeScene) {
-        window.app.threeScene.createCube({ 
-            position: position,
-            size: 0.5
-        });
-        console.log('测试: 创建立方体', position);
-    }
-}
-
-let dynamicTestInterval = null;
-let testLine = null;
-let testStartPoint = null;
-
-function startDynamicLineTest() {
-    if (dynamicTestInterval) {
-        clearInterval(dynamicTestInterval);
-    }
-    
-    // 创建固定起点
-    testStartPoint = [0, 0, 0];
-    window.app.threeScene.createPoint({ 
-        position: testStartPoint, 
-        color: 0x00ff00,
-        name: 'fixed_start_point'
-    });
-    
-    // 创建动态线条
-    testLine = window.app.threeScene.createDynamicLine();
-    
-    let angle = 0;
-    const radius = 3;
-    
-    dynamicTestInterval = setInterval(() => {
-        angle += 0.1;
-        
-        // 计算动态终点位置（圆周运动）
-        const endX = Math.cos(angle) * radius;
-        const endZ = Math.sin(angle) * radius;
-        const endPosition = [endX, 1, endZ];
-        
-        // 更新线条
-        const points = [
-            new THREE.Vector3(...testStartPoint),
-            new THREE.Vector3(...endPosition)
+    <script>
+    // 测试函数
+    function getTestPosition() {
+        return [
+            parseFloat(document.getElementById('test-x').value) || 0,
+            parseFloat(document.getElementById('test-y').value) || 0,
+            parseFloat(document.getElementById('test-z').value) || 0
         ];
-        window.app.threeScene.updateDynamicLine(testLine, points);
-        
-        // 更新坐标显示
-        document.getElementById('test-x').value = endX.toFixed(2);
-        document.getElementById('test-z').value = endZ.toFixed(2);
-        
-    }, 50); // 20fps更新
-}
-
-function stopDynamicLineTest() {
-    if (dynamicTestInterval) {
-        clearInterval(dynamicTestInterval);
-        dynamicTestInterval = null;
     }
-    if (testLine) {
-        window.app.threeScene.scene.remove(testLine);
-        testLine = null;
-    }
-}
 
-</script>
+    function testCreatePoint() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.createPoint({ 
+                position: position,
+                color: 0xffff00 
+            });
+            console.log('测试: 画点', position);
+        } else {
+            console.error('ThreeScene未初始化');
+        }
+    }
+
+    function testStartDrawing() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.startDrawingLine({ 
+                position: position 
+            });
+            console.log('测试: 开始画线', position);
+        }
+    }
+
+    function testUpdateDrawing() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.updateDrawingLine({ 
+                position: position 
+            });
+            console.log('测试: 更新画线', position);
+        }
+    }
+
+    function testFinishDrawing() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.finishDrawingLine({ 
+                position: position 
+            });
+            console.log('测试: 完成画线', position);
+        }
+    }
+
+    function testCreateRectangle() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.createRectangle({
+                normal: [0, 1, 0],
+                corner1: [position[0]-1, position[1], position[2]-0.5],
+                corner2: [position[0]+1, position[1], position[2]+0.5],
+                color: 0x3498db
+            });
+            console.log('测试: 画长方形', position);
+        }
+    }
+
+    function testCreateCube() {
+        const position = getTestPosition();
+        if (window.app && window.app.threeScene) {
+            window.app.threeScene.createCube({ 
+                position: position,
+                size: 0.5
+            });
+            console.log('测试: 创建立方体', position);
+        }
+    }
+    </script>
 </body>
 </html>

@@ -5,28 +5,29 @@ import cv2
 
 context = zmq.Context()
 
+# 绑定端口 - 接收摄像头和ToF数据
 camera_socket = context.socket(zmq.PULL)
 camera_socket.bind("tcp://127.0.0.1:5556")
+print("📷 摄像头端口绑定: 5556")
 
 serial_socket = context.socket(zmq.PULL)
 serial_socket.bind("tcp://127.0.0.1:5555")
+print("📡 ToF端口绑定: 5555")
 
+# 发送融合数据到手势识别
 sender_socket = context.socket(zmq.PUSH)
 sender_socket.bind("tcp://127.0.0.1:5557")
+print("📤 融合数据端口绑定: 5557")
 
-# 示例参数（替换成你的实际量）
+# 示例参数
 W, H = 8, 8
-FoV_x = np.deg2rad(40.0)   # 可调整或按 datasheet 确定
-FoV_y = np.deg2rad(25.0)
-K = np.array([[504.75482615870874, 0, 312.03400445227277],
-              [0, 508.21911022517912, 250.01176949694818],
-              [0,  0,  1]])  # 填入你的相机内参
-R = np.array([
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1]
-])   # 填入外参（ToF -> Camera）
-t = np.zeros(3) # 填入外参平移（meters）
+FoV_x = np.deg2rad(45.0)
+FoV_y = np.deg2rad(45.0)
+K = np.array([[500, 0, 320],
+              [0, 500, 240],
+              [0, 0, 1]])
+R = np.eye(3)
+t = np.array([0, 0, 0])
 
 def zone_angles(W, H, FoV_x, FoV_y):
     cs = np.arange(W)
@@ -37,147 +38,164 @@ def zone_angles(W, H, FoV_x, FoV_y):
     return theta_x, theta_y
 
 def depthgrid_to_camera_points(depth_grid, K, R, t, FoV_x, FoV_y):
-    # depth_grid: HxW in meters (NaN or 0 if invalid)
-    theta_x, theta_y = zone_angles(W, H, FoV_x, FoV_y)
-    tx = np.tan(theta_x)
-    ty = np.tan(theta_y)
-    denom = np.sqrt(tx**2 + ty**2 + 1.0)
-    dirs = np.stack([tx/denom, ty/denom, 1.0/denom], axis=-1)  # HxWx3
-    points_ir = (depth_grid[...,None] * dirs)  # HxWx3 in ToF frame
-    # reshape to N x 3
-    pts_ir_flat = points_ir.reshape(-1,3)
-    # filter invalid depths
-    valid = np.isfinite(pts_ir_flat[:,2]) & (pts_ir_flat[:,2] > 0.01)
-    pts_ir_valid = pts_ir_flat[valid]
-    # transform to camera frame
-    pts_cam = (R.dot(pts_ir_valid.T) + t.reshape(3,1)).T  # N x 3
-    return pts_cam, valid
+    try:
+        theta_x, theta_y = zone_angles(W, H, FoV_x, FoV_y)
+        tx = np.tan(theta_x)
+        ty = np.tan(theta_y)
+        denom = np.sqrt(tx**2 + ty**2 + 1.0)
+        dirs = np.stack([tx/denom, ty/denom, 1.0/denom], axis=-1)
+        points_ir = (depth_grid[...,None] * dirs)
+        pts_ir_flat = points_ir.reshape(-1,3)
+        valid = np.isfinite(pts_ir_flat[:,2]) & (pts_ir_flat[:,2] > 0.01)
+        pts_ir_valid = pts_ir_flat[valid]
+        pts_cam = (R.dot(pts_ir_valid.T) + t.reshape(3,1)).T
+        return pts_cam, valid
+    except Exception as e:
+        print(f"❌ 深度数据转换错误: {e}")
+        return np.array([]), np.array([])
 
 def project_points(pts_cam, K):
+    if len(pts_cam) == 0:
+        return np.array([])
     X = pts_cam[:,0]; Y = pts_cam[:,1]; Z = pts_cam[:,2]
     u = (K[0,0]*X / Z) + K[0,2]
     v = (K[1,1]*Y / Z) + K[1,2]
     return np.stack([u,v], axis=1)
 
-# ========= 新增：一个小的融合函数（不动你的底层数学） =========
-
 def fuse_points_with_depth(camera_points, frame_size, pts_cam):
-    """
-    camera_points: 来自 camera 的 12 个 [x_norm, y_norm] (0~1)
-    frame_size: [w, h]，像素
-    pts_cam: N x 3 的 ToF 点（相机坐标系，单位 m）
-
-    思路：
-    1. 用 project_points 把 ToF 点投影到图像平面 (u,v)
-    2. 对每个摄像头点 (x_norm, y_norm) -> (u0, v0) 像素
-    3. 在全部 ToF 投影点里找最近的点，拿它的 Z 当作这个关键点的 z
-    4. 返回 12 个 [x_norm, y_norm, z]
-    """
     w, h = frame_size
     fused = []
 
     if pts_cam is None or len(pts_cam) == 0:
-        # 没有任何 ToF 点，直接补 z=0
+        print("⚠️ 无ToF点云数据，使用默认深度")
         for p in camera_points:
             if not isinstance(p, (list, tuple)) or len(p) < 2:
                 fused.append([0.0, 0.0, 0.0])
             else:
-                fused.append([float(p[0]), float(p[1]), 0.0])
+                # 给2D点添加默认深度
+                fused.append([float(p[0]), float(p[1]), 1.0])  # 默认深度1米
         return fused
 
-    # 2D 投影
-    pts_img = project_points(pts_cam, K)  # N x 2
-    u_all = pts_img[:, 0]
-    v_all = pts_img[:, 1]
-    Z_all = pts_cam[:, 2]
+    try:
+        pts_img = project_points(pts_cam, K)
+        if len(pts_img) == 0:
+            raise ValueError("投影点为空")
+            
+        u_all = pts_img[:, 0]
+        v_all = pts_img[:, 1]
+        Z_all = pts_cam[:, 2]
 
-    for p in camera_points:
-        if not isinstance(p, (list, tuple)) or len(p) < 2:
-            fused.append([0.0, 0.0, 0.0])
-            continue
+        for p in camera_points:
+            if not isinstance(p, (list, tuple)) or len(p) < 2:
+                fused.append([0.0, 0.0, 0.0])
+                continue
 
-        x_norm, y_norm = float(p[0]), float(p[1])
+            x_norm, y_norm = float(p[0]), float(p[1])
 
-        # camera 里 [0,0] 表示无效点
-        if x_norm == 0.0 and y_norm == 0.0:
-            fused.append([0.0, 0.0, 0.0])
-            continue
+            if x_norm == 0.0 and y_norm == 0.0:
+                fused.append([0.0, 0.0, 0.0])
+                continue
 
-        # 归一化坐标 -> 像素坐标
-        u0 = x_norm * w
-        v0 = y_norm * h
+            u0 = x_norm * w
+            v0 = y_norm * h
 
-        # 找最近的投影点
-        du = u_all - u0
-        dv = v_all - v0
-        dist2 = du*du + dv*dv
-        idx = int(np.argmin(dist2))
+            # 找最近的投影点
+            du = u_all - u0
+            dv = v_all - v0
+            dist2 = du*du + dv*dv
+            
+            if len(dist2) > 0:
+                idx = int(np.argmin(dist2))
+                z = float(Z_all[idx])
+                # 深度范围限制
+                z = max(0.1, min(5.0, z))
+            else:
+                z = 1.0  # 默认深度
 
-        z = float(Z_all[idx])  # 已经是米
-
-        fused.append([x_norm, y_norm, z])
+            fused.append([x_norm, y_norm, z])
+            
+    except Exception as e:
+        print(f"❌ 数据融合错误: {e}")
+        # 出错时返回带默认深度的点
+        for p in camera_points:
+            if not isinstance(p, (list, tuple)) or len(p) < 2:
+                fused.append([0.0, 0.0, 0.0])
+            else:
+                fused.append([float(p[0]), float(p[1]), 1.0])
 
     return fused
 
-# ========= 先收一帧 ToF，保持你原来的“底层流程”不变 =========
-
-serial_msg = serial_socket.recv_json()
-
-depth_mm = np.array(serial_msg["depth_mm"], dtype=float)   
-depth_m  = depth_mm / 1000.0                               
-
-pts_cam, valid_mask = depthgrid_to_camera_points(
-    depth_m,
-    K, R, t,
-    FoV_x, FoV_y
-)
-
-# feat : poller
+# ========= 主循环 =========
+print("🔄 开始数据融合循环...")
 
 poller = zmq.Poller()
 poller.register(camera_socket, zmq.POLLIN)
 poller.register(serial_socket, zmq.POLLIN)
 
 camera_data = None
-serial_data = None
+pts_cam = None
+last_tof_time = 0
+frame_count = 0
 
-while True:
-    socks = dict(poller.poll())
+try:
+    while True:
+        socks = dict(poller.poll(timeout=100))
 
-    # 收摄像头 JSON（points 已经是 12 个点）
-    if camera_socket in socks:
-        camera_data = camera_socket.recv_json()
+        # 接收摄像头数据
+        if camera_socket in socks:
+            camera_data = camera_socket.recv_json()
+            print(f"📷 收到摄像头数据帧 #{frame_count}")
 
-    # 收串口 JSON，更新 depth -> pts_cam
-    if serial_socket in socks:
-        # ✅ 原来是 recv_string() + TODO，这里改成 recv_json()，走你上面的逻辑
-        serial_msg = serial_socket.recv_json()
-        serial_data = serial_msg
+        # 接收ToF数据
+        if serial_socket in socks:
+            try:
+                serial_msg = serial_socket.recv_json()
+                depth_mm = np.array(serial_msg["depth_mm"], dtype=float)
+                depth_m = depth_mm / 1000.0
+                
+                # 处理无效值
+                depth_m = np.where(depth_m > 0.01, depth_m, np.nan)
+                
+                pts_cam, valid_mask = depthgrid_to_camera_points(
+                    depth_m, K, R, t, FoV_x, FoV_y
+                )
+                last_tof_time = time.time()
+                print(f"📊 ToF点云: {len(pts_cam) if pts_cam is not None else 0}个点")
+                
+            except Exception as e:
+                print(f"❌ ToF数据处理错误: {e}")
+                pts_cam = None
 
-        depth_mm = np.array(serial_msg["depth_mm"], dtype=float)
-        depth_m  = depth_mm / 1000.0
+        # 数据融合处理
+        if camera_data is not None:
+            frame_size = camera_data.get("frame_size", [640, 480])
+            cam_points = camera_data["points"]
+            
+            fused_points = fuse_points_with_depth(cam_points, frame_size, pts_cam)
+            
+            out = {
+                "timestamp": time.time(),
+                "points": fused_points,
+                "frame_size": frame_size,
+                "type": "fused_xyz",
+            }
+            
+            sender_socket.send_pyobj(out)
+            frame_count += 1
+            print(f"📤 发送融合数据帧 #{frame_count}: {len(fused_points)}个3D点")
+            camera_data = None
 
-        pts_cam, valid_mask = depthgrid_to_camera_points(
-            depth_m,
-            K, R, t,
-            FoV_x, FoV_y
-        )
+        # ToF数据超时处理
+        if pts_cam is not None and time.time() - last_tof_time > 3.0:
+            print("⚠️ ToF数据超时")
+            pts_cam = None
 
-    # ==== 在这里做融合计算 ====
-    if camera_data is not None:
-        frame_size = camera_data.get("frame_size", [640, 480])
-        cam_points = camera_data["points"]  # 12 个 [x_norm, y_norm]
-
-        # ✅ 用最新的 pts_cam 给 12 个点补 z
-        fused_points = fuse_points_with_depth(cam_points, frame_size, pts_cam)
-
-        out = {
-            "timestamp": camera_data["timestamp"],
-            "points": fused_points,  # ★★★ 现在是 12 个 [x,y,z] ★★★
-            "frame_size": frame_size,
-            "type": "fused_xyz",     # 标一标，现在是融合后的 xyz
-        }
-        sender_socket.send_pyobj(out)
-        camera_data = None   # 用完清空，等待下一帧
-
-    # 如果你后面要用 ToF 深度做更多事情，可以继续用 serial_data / pts_cam / valid_mask
+except KeyboardInterrupt:
+    print("⏹️ 用户中断程序")
+except Exception as e:
+    print(f"❌ 程序错误: {e}")
+finally:
+    camera_socket.close()
+    serial_socket.close()
+    sender_socket.close()
+    context.term()

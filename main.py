@@ -1,4 +1,3 @@
-# main.py
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -45,39 +44,55 @@ def get_status():
 @app.route('/api/start-modeling', methods=['POST'])
 def start_modeling():
     """开始建模会话"""
-    if app_state.is_modeling:
-        return jsonify({'error': '建模会话已在进行中'}), 400
-    
-    app_state.is_modeling = True
-    app_state.current_session = f"session_{int(time.time())}"
-    
-    # 通知所有客户端开始建模
-    socketio.emit('modeling_started', {
-        'session_id': app_state.current_session,
-        'timestamp': time.time()
-    })
-    
-    logger.info(f"建模会话开始: {app_state.current_session}")
-    return jsonify({'session_id': app_state.current_session})
+    try:
+        if app_state.is_modeling:
+            return jsonify({'error': '建模会话已在进行中'}), 400
+        
+        app_state.is_modeling = True
+        app_state.current_session = f"session_{int(time.time())}"
+        
+        # 通知所有客户端开始建模
+        socketio.emit('modeling_started', {
+            'session_id': app_state.current_session,
+            'timestamp': time.time()
+        })
+        
+        logger.info(f"建模会话开始: {app_state.current_session}")
+        return jsonify({
+            'session_id': app_state.current_session,
+            'message': '建模会话开始成功'
+        })
+        
+    except Exception as e:
+        logger.error(f"开始建模失败: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/stop-modeling', methods=['POST'])
 def stop_modeling():
     """结束建模会话"""
-    if not app_state.is_modeling:
-        return jsonify({'error': '没有正在进行的建模会话'}), 400
-    
-    session_id = app_state.current_session
-    app_state.is_modeling = False
-    app_state.current_session = None
-    
-    # 通知所有客户端结束建模
-    socketio.emit('modeling_stopped', {
-        'session_id': session_id,
-        'timestamp': time.time()
-    })
-    
-    logger.info(f"建模会话结束: {session_id}")
-    return jsonify({'message': '建模会话已结束'})
+    try:
+        if not app_state.is_modeling:
+            return jsonify({'error': '没有正在进行的建模会话'}), 400
+        
+        session_id = app_state.current_session
+        app_state.is_modeling = False
+        app_state.current_session = None
+        
+        # 通知所有客户端结束建模
+        socketio.emit('modeling_stopped', {
+            'session_id': session_id,
+            'timestamp': time.time()
+        })
+        
+        logger.info(f"建模会话结束: {session_id}")
+        return jsonify({
+            'message': '建模会话已结束',
+            'session_id': session_id
+        })
+        
+    except Exception as e:
+        logger.error(f"停止建模失败: {e}")
+        return jsonify({'error': str(e)}), 500
 
 # WebSocket 事件处理
 @socketio.on('connect')
@@ -91,6 +106,7 @@ def handle_connect():
         'client_id': request.sid,
         'is_modeling': app_state.is_modeling,
         'current_session': app_state.current_session,
+        'connected_clients': app_state.connected_clients,
         'timestamp': time.time()
     })
 
@@ -114,13 +130,6 @@ def handle_client_ready(data):
 def handle_gesture_command(data):
     """
     接收手势指令数据
-    数据格式:
-    {
-        "type": "command",  # 或 "stream"
-        "command": "create_cube",  # 指令类型
-        "parameters": {...},       # 指令参数
-        "timestamp": 1234567890.123
-    }
     """
     logger.info(f'收到手势指令: {data}')
     
@@ -129,36 +138,28 @@ def handle_gesture_command(data):
         emit('error', {'message': '无效的数据格式'}, room=request.sid)
         return
     
-    # 转发给所有前端客户端
-    emit('gesture_update', data, broadcast=True)
+    # 只有在建模状态下才转发手势命令
+    if app_state.is_modeling:
+        emit('gesture_update', data, broadcast=True)
+        logger.info(f'转发手势命令: {data.get("command", "unknown")}')
+    else:
+        logger.warning(f'收到手势命令但建模未开始: {data}')
 
 @socketio.on('hand_coordinates')
 def handle_hand_coordinates(data):
     """
     接收实时手部坐标数据
-    数据格式:
-    {
-        "type": "coordinates",
-        "session_id": "session_123",
-        "coordinates": {
-            "palm_center": [x, y, z],
-            "index_tip": [x, y, z],
-            "thumb_tip": [x, y, z]
-        },
-        "gesture_state": "pointing",
-        "timestamp": 1234567890.123
-    }
     """
-    # 只转发给前端，不做复杂处理
-    emit('hand_update', data, broadcast=True)
+    if app_state.is_modeling:
+        emit('hand_update', data, broadcast=True)
 
 @socketio.on('binary_hand_data')
 def handle_binary_hand_data(binary_data):
     """
     接收二进制手部数据（高效传输）
     """
-    # 直接转发二进制数据
-    emit('binary_hand_update', binary_data, broadcast=True)
+    if app_state.is_modeling:
+        emit('binary_hand_update', binary_data, broadcast=True)
 
 def validate_gesture_data(data):
     """验证手势数据格式"""
