@@ -21,8 +21,8 @@ def main():
         ("LocationCalculate.py", "数据融合中心"),  # 先启动，绑定端口
         ("SerialReceiver.py", "ToF传感器"),       # 然后启动传感器
         ("Camera.py", "摄像头手部追踪"),           # 再启动摄像头
-        ("receive.py", "手势识别"),               # 最后启动识别
-        ("main.py", "Web服务器")                  # Web界面
+        ("main.py", "Web服务器"),               # 最后启动识别
+        ("receive.py", "手势识别")                  # Web界面
     ]
     
     print("⏳ 按顺序启动程序...")

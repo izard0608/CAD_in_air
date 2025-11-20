@@ -33,7 +33,7 @@ class GestureBackend:
         self.DIS_OFF  = 0.08
         self.MOVE_EPS = 0.02
         self.DEGREE_THRESHOLD   = 60.0
-        self.DIS_THRESHOLD      = 0.05
+        self.DIS_THRESHOLD      = 2
 
         # 状态
         self.edge_flag = 0
