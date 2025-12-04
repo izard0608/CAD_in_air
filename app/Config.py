@@ -6,6 +6,8 @@ LEFT_FORE_FINGER   =  [3, 4, 5]
 RIGHT_THUMB_FINGER =  [6, 7, 8]
 RIGHT_FORE_FINGER  =  [9, 10, 11]
 
+
+
 # 相关阈值
 TIME_THRESHOLD = 0.8
 MAXLEN = 30
@@ -19,14 +21,24 @@ LOG_EVERY_N = 10
 HISTORY_N = 200
 COMMAND_COOLDOWN = 0.5
 
+
+
 # 服务器地址
 SERVER_URL = 'http://localhost:5000'
+
+
 
 # 其他配置
 class Config:
     SECRET_KEY = 'This-is-a-secret-key' # flask用于加密会话的密钥
     CORS_ALLOWED_ORIGINS = "*" # 表示允许来自 所有域名 的跨域请求（"*" 是通配符，表示允许任何来源的请求。）
     SOCKET_IO_ASYNC_MODE = 'threading' # 异步模式，表示 Flask-SocketIO 使用 多线程 模式来处理客户端连接和事件。（"threading"表示每个事件都会在单独的线程中处理）
+
+    # SerialReciever.py中相关配置
+    SERIAL_PORT = "COM3"  # 串口号
+    BAUD_RATE = 115200  # 波特率
+    ZMQ_ADDRESS = "tcp://127.0.0.1:5555"  # ZeroMQ 地址
+
 
 
 # SocketHandler.py中事件、函数一览
