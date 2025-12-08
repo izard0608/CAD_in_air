@@ -1,4 +1,4 @@
-# route.py
+# app.sockets.SocketRoutes.py
 '''
 路由：将客户端发来的请求映射到服务器某个处理逻辑（函数）上
 flask中，路由将不同的URL路径映射到python函数（视图函数）上

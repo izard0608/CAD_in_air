@@ -1,4 +1,4 @@
-# SerialReceiver.py
+# app.receivers.SerialReceiver.py
 
 # 这里创建SerialReceiver类，
 # 波特率、端口号、地址的配置统一放到config里了，

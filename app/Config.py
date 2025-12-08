@@ -1,4 +1,4 @@
-# Config.py 配置文件
+# config.py 配置文件
 
 # 手指标号
 LEFT_THUMB_FINGER  =  [0, 1, 2]
@@ -29,7 +29,7 @@ SERVER_URL = 'http://localhost:5000'
 
 
 # 其他配置
-class Config:
+class config:
     SECRET_KEY = 'This-is-a-secret-key' # flask用于加密会话的密钥
     CORS_ALLOWED_ORIGINS = "*" # 表示允许来自 所有域名 的跨域请求（"*" 是通配符，表示允许任何来源的请求。）
     SOCKET_IO_ASYNC_MODE = 'threading' # 异步模式，表示 Flask-SocketIO 使用 多线程 模式来处理客户端连接和事件。（"threading"表示每个事件都会在单独的线程中处理）

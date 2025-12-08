@@ -1,4 +1,4 @@
-# SocketHandler.py  socketIO相关事件的逻辑
+# app.sockets.SocketHandler.py  socketIO相关事件的逻辑，创建websocket服务器
 '''
 Socket 事件逻辑是指在 WebSocket 连接过程中，客户端和服务器之间进行双向通信时，定义一些事件来处理特定的操作。
 本程序用到的事件、函数为了看着方便在Config.py里一起列出来了

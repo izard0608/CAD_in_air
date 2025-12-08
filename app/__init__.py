@@ -21,7 +21,7 @@ app = Flask(__name__,#第一个参数是函数模块或包的名称
 )
 
 # 从Config.py里加载flask密钥的配置
-app.Config.from_object('Config') # 从config里面加载配置
+app.config.from_object('app.config') # 从config里面加载配置
 
 # 将 CORS 设置到 Flask 应用实例 app 上，CORS是什么见上文import处
 CORS(app, origins=app.config['CORS_ALLOWED_ORIGINS'])

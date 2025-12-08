@@ -12,3 +12,4 @@ def configure_logging():
         # 日志的基本配置，配置最低记录级别位INFO。此配置是全局性的。
     logger = logging.getLogger(__name__) 
         # 创建一个日志对象，使用当前模块名作为日志名。用__name__保证每个模块有一个单独的logger实例。
+        

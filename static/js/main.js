@@ -1,8 +1,5 @@
-// main.js
+// static.js.main.js
 // 这里定义了CameraManager和GestureModelingApp两个类
-
-
-
 // 负责管理摄像头视频流的获取、停止以及 WebRTC 连接的创建
 class CameraManager {
     constructor() {
@@ -11,41 +8,36 @@ class CameraManager {
         this.isActive = false;
         this.localStream = null;
         this.peerConnection = null;
+        this.socket = io.connect(); // WebSocket连接
     }
 
-
     // startCamera方法
-    async startCamera(){
-        try{
+    async startCamera() {
+        try {
             console.log('连接视频流...');
 
             this.videoElement = document.getElementById('camera-video');
             this.overlayElement = document.getElementById('camera-overlay');
-            // 获取显示层和覆盖层
-            // video 元素用于显示本地视频流，而覆盖层用于在摄像头视频流连接失败时显示错误信息。
 
-            if(!this.videoElement){
+            if (!this.videoElement) {
                 throw new Error('未找到视频元素');
             }
 
             // 获取本地视频流
             this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             this.videoElement.srcObject = this.localStream;
-            // navigator.mediaDevices.getUserMedia 是浏览器提供的 API，用于访问设备的摄像头和麦克风
-            // 第二行将从摄像头获取到的媒体流赋值给 videoElement 的 srcObject，使视频流在index.html上的 video 标签中显示。
-        
+
             this.createPeerConnection(); // 创建 WebRTC 连接
 
             // 如果摄像头流连接成功，则隐藏覆盖层，展示本地视频流
             if (this.overlayElement) {
                 this.overlayElement.style.display = 'none';
             }
-            
+
             this.isActive = true;
             console.log('视频流连接设置完成');
-            
             return true;
-            
+
         } catch (error) {
             console.error('视频流连接失败:', error);
             this.showCameraError(error);
@@ -53,27 +45,23 @@ class CameraManager {
         }
     }
 
-
-    //下面这一块是新添的
     // 创建 WebRTC 连接并处理本地和远程的视频流
     createPeerConnection() {
-
-        // 创建 RTCPeerConnection 实例
         const configuration = {
             iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
         };
+
         this.peerConnection = new RTCPeerConnection(configuration);
-        // 通过配置的 ICE 服务器（这里是STUN，edge、google等都可以用），创建一个 RTCPeerConnection 实例，用于处理网络连接、传输数据流、协商连接等
 
         // 将本地视频流的所有轨道添加到 peerConnection 中
         this.localStream.getTracks().forEach(track => {
-            this.peerConnection.addTrack(track, this.localStream); // this.localStream 是通过 getUserMedia 获取到的本地视频流。
+            this.peerConnection.addTrack(track, this.localStream);
         });
 
         // 处理 ICE 候选
         this.peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
-                sendSignal('new-ice-candidate', event.candidate);
+                this.socket.emit('new-ice-candidate', event.candidate); // 发送 ICE candidate
             }
         };
 
@@ -82,8 +70,61 @@ class CameraManager {
             const remoteVideo = document.getElementById('remote-video');
             remoteVideo.srcObject = event.streams[0];
         };
-        // ontrack 事件用于处理远程端传过来的媒体流（如远程视频）。当远程端的媒体流加入到连接时，它会触发此事件，并且可以通过 event.streams[0] 获取到远程流。
-        // remote-video 是 index.html 中定义的一个 <video> 元素
+
+        // 监听来自后端的信令消息
+        this.socket.on('offer', (offer) => {
+            this.handleOffer(offer);
+        });
+
+        this.socket.on('answer', (answer) => {
+            this.handleAnswer(answer);
+        });
+
+        this.socket.on('ice-candidate', (candidate) => {
+            this.handleIceCandidate(candidate);
+        });
+    }
+
+    // 创建 Offer
+    async createOffer() {
+        try {
+            const offer = await this.peerConnection.createOffer();
+            await this.peerConnection.setLocalDescription(offer); // 设置本地描述
+            console.log('发送 Offer:', offer);
+            this.socket.emit('offer', offer); // 通过 WebSocket 发送 Offer
+        } catch (error) {
+            console.error('创建 Offer 失败:', error);
+        }
+    }
+
+    // 处理来自后端的 Answer
+    handleAnswer(answer) {
+        this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    }
+
+    // 处理 ICE candidate
+    handleIceCandidate(candidate) {
+        this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    }
+
+    // 处理 Offer（用于接收对方发送的 Offer）
+    async handleOffer(offer) {
+        try {
+            await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await this.peerConnection.createAnswer();
+            await this.peerConnection.setLocalDescription(answer);
+            this.socket.emit('answer', answer); // 发送 Answer
+        } catch (error) {
+            console.error('处理 Offer 失败:', error);
+        }
+    }
+
+    // 错误处理方法
+    showCameraError(error) {
+        if (this.overlayElement) {
+            this.overlayElement.style.display = 'block';
+            this.overlayElement.innerText = `摄像头错误: ${error.message}`;
+        }
     }
 }
 

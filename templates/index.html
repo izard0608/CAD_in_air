@@ -1,16 +1,14 @@
 <!-- index.html -->
  <!DOCTYPE html> <!-- 声明文档类型 -->
  <html lang = "zh-CN"> 
-    <!-- 
- 起始标签，表示网页是简体中文编写的
- html是网页
- -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAD_in_Air</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 
 <body>
 <!-- 顶部导航栏的相关显示内容，按钮，文字等 -->
@@ -99,159 +97,7 @@
                 </div>
             </div>
         </div>
-
     </main>
-
-    <footer class="status-bar">
-        <div class="status-left">
-            <span>会话ID: <span id="session-id">未开始</span></span>
-        </div>
-        <div class="status-center">
-            <span id="operation-hint">请点击"开始建模"按钮启动手势识别</span>
-        </div>
-        <div class="status-right">
-            <span>连接客户端: <span id="client-count">0</span></span>
-        </div>
-    </footer>
-
-    <!-- 引入js文件 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/websocket-client.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/three-scene.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-</body>
-</html>
-2. JavaScript 修改
-修改 main.js 来处理 WebRTC 的相关内容：
-
-javascript
-复制代码
-let localStream = null;
-let peerConnection = null;
-let socket = io.connect('http://localhost:5000'); // WebSocket 连接
-
-// 用于获取本地视频流并显示
-function startCamera() {
-  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then((stream) => {
-      localStream = stream;
-      document.getElementById("local-video").srcObject = stream;
-      
-      // 创建 WebRTC 连接
-      createPeerConnection();
-      // 将本地流发送给远端
-      addStreamToConnection(localStream);
-    })
-    .catch((err) => {
-      console.error("获取视频流失败:", err);
-    });
-}
-
-// 创建 WebRTC 连接
-function createPeerConnection() {
-  const configuration = {
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-  };
-  
-  peerConnection = new RTCPeerConnection(configuration);
-  
-  // 添加 ICE 候选
-  peerConnection.onicecandidate = function (event) {
-    if (event.candidate) {
-      sendSignal('new-ice-candidate', event.candidate);
-    }
-  };
-
-  // 设置远端视频流
-  peerConnection.ontrack = function (event) {
-    const remoteVideo = document.getElementById("remote-video");
-    remoteVideo.srcObject = event.streams[0];
-  };
-}
-
-// 将本地视频流添加到 WebRTC 连接
-function addStreamToConnection(stream) {
-  stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-}
-
-// 信令传输
-function sendSignal(type, data) {
-  socket.emit(type, data);
-}
-
-// 信令处理：收到信令后设置连接
-socket.on('offer', (offer) => {
-  peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
-    .then(() => peerConnection.createAnswer())
-    .then((answer) => {
-      peerConnection.setLocalDescription(answer);
-      sendSignal('answer', answer);
-    });
-});
-
-socket.on('answer', (answer) => {
-  peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-});
-
-socket.on('ice-candidate', (candidate) => {
-  peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-});
-3. 核心修改
-视频流部分：现在视频流是通过 getUserMedia 获取的，而不是通过 iframe。这段代码会启动摄像头并将视频流显示在本地的 <video> 标签上。
-
-WebRTC 连接：RTCPeerConnection 用来创建 WebRTC 连接，传输视频流。信令的部分通过 WebSocket (Socket.io) 进行。
-
-Socket.io 信令交换：通过 socket.emit 和 socket.on 与后端进行信令交换。通过交换 offer 和 answer 建立 WebRTC 连接，交换 ICE 候选来进行 NAT 穿透。
-
-4. 后端修改
-为了让 WebRTC 正常工作，后端需要处理信令。你可以在 Flask 后端中使用 Socket.io 进行信令处理。这里是一个简单的后端信令处理示例：
-
-python
-复制代码
-import socketio
-
-# 初始化 Flask 和 Socket.io
-sio = socketio.Server()
-app = Flask(__name__)
-app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
-
-@sio.event
-def connect(sid, environ):
-    print(f"客户端 {sid} 连接")
-
-@sio.event
-def disconnect(sid):
-    print(f"客户端 {sid} 断开连接")
-
-@sio.event
-def offer(sid, data):
-    # 发送offer到其他
-
-
-
-
-
-
-
-
-
-<!-- 右侧面板显示 3D 建模的内容区域，等待 Three.js 渲染模型 --> 
-<div class="right-panel">
-    <div class="modeling-container">
-        <h3>3D建模界面</h3>
-        <div id="modeling-scene" class="modeling-scene">
-            <!-- Three.js画布将在这里渲染 -->
-            <div class="scene-overlay">
-                <div class="overlay-content">
-                    <h4>3D建模画布</h4>
-                    <p>建模会话开始后，这里将显示实时3D模型</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!-- 底部状态栏 -->
@@ -266,6 +112,7 @@ def offer(sid, data):
         <span>连接客户端: <span id="client-count">0</span></span>
     </div>
 </footer>
+
 
 <!-- 引入js文件 -->
     <!-- Three.js 库 -->

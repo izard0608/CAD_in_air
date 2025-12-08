@@ -1,4 +1,4 @@
-# WebSocketClient.py
+# app.sockets.WebSocketClient.py
 # 创建一个连接到 Flask 服务器的 WebSocket 客户端实例。
 # 处理与服务器之间的实时通信。
 
@@ -27,3 +27,4 @@ def create_client(server_url='http://localhost:5000'):
 
     sio.server_url = server_url
     return sio
+
