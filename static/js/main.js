@@ -6,124 +6,88 @@ class CameraManager {
         this.videoElement = null;
         this.overlayElement = null;
         this.isActive = false;
-        this.localStream = null;
-        this.peerConnection = null;
-        this.socket = io.connect(); // WebSocket连接
     }
-
-    // startCamera方法
+    
     async startCamera() {
         try {
             console.log('连接视频流...');
-
+            
             this.videoElement = document.getElementById('camera-video');
             this.overlayElement = document.getElementById('camera-overlay');
-
+            
             if (!this.videoElement) {
                 throw new Error('未找到视频元素');
             }
 
-            // 获取本地视频流
-            this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-            this.videoElement.srcObject = this.localStream;
-
-            this.createPeerConnection(); // 创建 WebRTC 连接
-
-            // 如果摄像头流连接成功，则隐藏覆盖层，展示本地视频流
+            // 直接设置 iframe 的 src
+            const streamURL = 'http://localhost:5001/video_feed';
+            console.log('设置视频流URL:', streamURL);
+            
+            this.videoElement.src = streamURL;
+            
+            // 隐藏覆盖层
             if (this.overlayElement) {
                 this.overlayElement.style.display = 'none';
             }
-
+            
             this.isActive = true;
             console.log('视频流连接设置完成');
+            
             return true;
-
+            
         } catch (error) {
             console.error('视频流连接失败:', error);
             this.showCameraError(error);
             return false;
         }
     }
-
-    // 创建 WebRTC 连接并处理本地和远程的视频流
-    createPeerConnection() {
-        const configuration = {
-            iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-        };
-
-        this.peerConnection = new RTCPeerConnection(configuration);
-
-        // 将本地视频流的所有轨道添加到 peerConnection 中
-        this.localStream.getTracks().forEach(track => {
-            this.peerConnection.addTrack(track, this.localStream);
-        });
-
-        // 处理 ICE 候选
-        this.peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                this.socket.emit('new-ice-candidate', event.candidate); // 发送 ICE candidate
-            }
-        };
-
-        // 处理远端视频流
-        this.peerConnection.ontrack = (event) => {
-            const remoteVideo = document.getElementById('remote-video');
-            remoteVideo.srcObject = event.streams[0];
-        };
-
-        // 监听来自后端的信令消息
-        this.socket.on('offer', (offer) => {
-            this.handleOffer(offer);
-        });
-
-        this.socket.on('answer', (answer) => {
-            this.handleAnswer(answer);
-        });
-
-        this.socket.on('ice-candidate', (candidate) => {
-            this.handleIceCandidate(candidate);
-        });
-    }
-
-    // 创建 Offer
-    async createOffer() {
-        try {
-            const offer = await this.peerConnection.createOffer();
-            await this.peerConnection.setLocalDescription(offer); // 设置本地描述
-            console.log('发送 Offer:', offer);
-            this.socket.emit('offer', offer); // 通过 WebSocket 发送 Offer
-        } catch (error) {
-            console.error('创建 Offer 失败:', error);
+    
+    stopCamera() {
+        if (this.videoElement) {
+            this.videoElement.src = '';
         }
-    }
-
-    // 处理来自后端的 Answer
-    handleAnswer(answer) {
-        this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    }
-
-    // 处理 ICE candidate
-    handleIceCandidate(candidate) {
-        this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    }
-
-    // 处理 Offer（用于接收对方发送的 Offer）
-    async handleOffer(offer) {
-        try {
-            await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-            const answer = await this.peerConnection.createAnswer();
-            await this.peerConnection.setLocalDescription(answer);
-            this.socket.emit('answer', answer); // 发送 Answer
-        } catch (error) {
-            console.error('处理 Offer 失败:', error);
-        }
-    }
-
-    // 错误处理方法
-    showCameraError(error) {
+        
+        this.isActive = false;
+        
         if (this.overlayElement) {
             this.overlayElement.style.display = 'block';
-            this.overlayElement.innerText = `摄像头错误: ${error.message}`;
+            this.overlayElement.innerHTML = `
+                <div class="overlay-text">
+                    <div>视频流已停止</div>
+                    <button onclick="app.cameraManager.startCamera()" 
+                            style="margin-top: 10px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        重新连接
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    showCameraError(error) {
+        const overlay = document.getElementById('camera-overlay');
+        if (overlay) {
+            overlay.innerHTML = `
+                <div class="overlay-text">
+                    <div style="color: #ff6b6b; font-size: 1.2em; margin-bottom: 10px;">
+                        无法连接视频流
+                    </div>
+                    <div style="color: #ccc; margin-bottom: 15px; font-size: 0.9em;">
+                        请确保 Camera.py 正在运行<br>
+                        错误信息: ${error.message}
+                    </div>
+                    <div>
+                        <button onclick="app.cameraManager.startCamera()" 
+                                style="padding: 8px 16px; margin: 5px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            重新连接
+                        </button>
+                        <button onclick="window.open('http://localhost:5001/video_feed', '_blank')" 
+                                style="padding: 8px 16px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            在新窗口测试
+                        </button>
+                    </div>
+                </div>
+            `;
+            overlay.style.display = 'block';
         }
     }
 }

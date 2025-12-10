@@ -35,51 +35,56 @@
     </header>
 
 
-    <!-- 改动的就是这一块 -->
-<!-- 使用 WebRTC 显示视频流 -->
-    <main class="main-content">
-        <div class="left-panel">
-            <div class="camera-container">
-                <h3>实时手部画面</h3>
-                <div class="camera-feed">
-                    <!-- 用 WebRTC 显示本地视频 -->
-                    <video id="local-video" autoplay muted style="width: 100%; height: 360px; border: none; border-radius: 8px;"></video>
-                    <div id="camera-overlay" class="camera-overlay" style="display: none;">
-                        <div class="overlay-text">
-                            <div> 视频流连接中...</div>
-                            <button onclick="startCamera()" 
-                                    style="margin-top: 10px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                重新连接
-                            </button>
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 左侧：摄像头画面和基本信息 -->
+            <div class="left-panel">
+                <div class="camera-container">
+                    <h3>实时手部画面</h3>
+                    <div class="camera-feed">
+                        <!-- 使用 iframe 显示视频流 -->
+                        <iframe id="camera-video" 
+                                src="http://localhost:5001/video_feed"
+                                style="width: 100%; height: 360px; border: none; border-radius: 8px;"
+                                allow="camera">
+                        </iframe>
+                        <div id="camera-overlay" class="camera-overlay" style="display: none;">
+                            <div class="overlay-text">
+                                <div>视频流连接中...</div>
+                                <button onclick="app.cameraManager.startCamera()" 
+                                        style="margin-top: 10px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    重新连接
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center; font-size: 12px; color: #666;">
+                        视频源: 后端摄像头处理程序 | 端口: 5001
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <h3>系统信息</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>数据包:</label>
+                            <span id="packet-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>延迟:</label>
+                            <span id="latency">0ms</span>
+                        </div>
+                        <div class="info-item">
+                            <label>FPS:</label>
+                            <span id="fps">0</span>
+                        </div>
+                        <div class="info-item">
+                            <label>手势状态:</label>
+                            <span id="gesture-state">等待数据...</span>
                         </div>
                     </div>
                 </div>
-                <div style="margin-top: 10px; text-align: center; font-size: 12px; color: #666;">
-                    视频源: 本地WebRTC摄像头
-                </div>
             </div>
-            <div class="info-panel">
-                <h3>系统信息</h3>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>数据包:</label>
-                        <span id="packet-count">0</span>
-                    </div>
-                    <div class="info-item">
-                        <label>延迟:</label>
-                        <span id="latency">0ms</span>
-                    </div>
-                    <div class="info-item">
-                        <label>FPS:</label>
-                        <span id="fps">0</span>
-                    </div>
-                    <div class="info-item">
-                        <label>手势状态:</label>
-                        <span id="gesture-state">等待数据...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
 <!-- 右侧面板，等待three.js渲染 -->

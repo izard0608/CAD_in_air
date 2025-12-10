@@ -9,6 +9,7 @@ from flask import Flask
 from flask_socketio import SocketIO # Flask-SocketIO 是一个 Flask 扩展，SocketIO 是 Flask-SocketIO 库中的一个类
 from flask_cors import CORS # 跨域资源共享（一种浏览器机制，浏览器为了安全防止一个网站在未经许可的情况下访问另一个网站的数据），一般浏览器默认禁止，但通过CORS，后端可以显式地允许来自特定域的请求
 from .LoggingConfig import configure_logging # 调用日志配置
+from app.config import config  # 导入配置类
 
 # 配置日志 调用了LoggingConfig.py里的函数
 logger = configure_logging()
@@ -19,6 +20,7 @@ app = Flask(__name__,#第一个参数是函数模块或包的名称
     template_folder='templates',# 告诉flask去哪里找相应资源
     static_folder='static'
 )
+
 
 # 从Config.py里加载flask密钥的配置
 app.config.from_object('app.config') # 从config里面加载配置
