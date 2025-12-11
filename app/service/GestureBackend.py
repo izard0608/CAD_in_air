@@ -16,8 +16,8 @@ import time
 import numpy as np
 from collections import deque
 
-from WebSocketClient import create_client
-import MathUtils as mu
+from sockets.WebSocketClient import create_client
+import utils.MathUtils as mu
 import Config
 
 
