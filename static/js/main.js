@@ -1,4 +1,29 @@
 // static/js/main.js
+
+// feat: 坐标映射工具
+// 这个参数可以调，表示缩放倍率
+const WORLD_SCALE = 20;
+
+function mapToWorld(pos) {
+  if (!pos) return [0, 0, 0];
+
+  const x = pos[0] ?? 0;
+  const y = pos[1] ?? 0;
+  const z = pos[2] ?? 1;
+
+  const worldX = (x - 0.5) * WORLD_SCALE;
+  const worldY = (0.5 - y) * WORLD_SCALE;
+  const worldZ = (z - 1.0) * (WORLD_SCALE * 0.2);
+
+  return [worldX, worldY, worldZ];
+}
+
+function mapNormal(n) {
+  if (!n) return [0, 0, 1];
+  return [n[0] ?? 0, -(n[1] ?? 0), n[2] ?? 1];
+}
+
+
 class CameraManager {
     constructor() {
         this.videoElement = null;
@@ -302,38 +327,58 @@ class GestureModelingApp {
         }
         
         try {
-            switch(data.command) {
+            // feat: 先映射
+            const p = data.parameters || {};
+
+            switch (data.command) {
                 case 'start_drawing_point':
-                    console.log('🎯 创建点:', data.parameters.position);
-                    this.threeScene.createPoint(data.parameters);
+                    console.log('🎯 创建点:', p.position);
+                    this.threeScene.createPoint({
+                    ...p,
+                    position: mapToWorld(p.position),
+                    });
                     break;
+
                 case 'start_drawing_line':
-                    console.log('📏 开始画线:', data.parameters.position);
-                    this.threeScene.startDrawingLine(data.parameters);
+                    console.log('📏 开始画线:', p.position);
+                    this.threeScene.startDrawingLine({
+                    ...p,
+                    position: mapToWorld(p.position),
+                    });
                     break;
+
                 case 'update_drawing_line':
-                    this.threeScene.updateDrawingLine(data.parameters);
+                    this.threeScene.updateDrawingLine({
+                    ...p,
+                    position: mapToWorld(p.position),
+                    });
                     break;
+
                 case 'finish_drawing_line':
-                    console.log('✅ 完成画线:', data.parameters.position);
-                    this.threeScene.finishDrawingLine(data.parameters);
+                    console.log('✅ 完成画线:', p.position);
+                    this.threeScene.finishDrawingLine({
+                    ...p,
+                    position: mapToWorld(p.position),
+                    });
                     break;
+
                 case 'create_plane':
                     console.log('🟦 创建平面');
                     this.threeScene.createRectangle({
-                        corner1: data.parameters.start_position,
-                        corner2: data.parameters.end_position,
-                        normal: data.parameters.normal_vector,
-                        color: 0x3498db,
-                        opacity: 0.7
+                    corner1: mapToWorld(p.start_position),
+                    corner2: mapToWorld(p.end_position),
+                    normal: mapNormal(p.normal_vector),
+                    color: 0x3498db,
+                    opacity: 0.7
                     });
                     break;
+
                 default:
                     console.log('未知命令:', data.command);
+                }
+            } catch (error) {
+                console.error('❌ 处理手势命令失败:', error);
             }
-        } catch (error) {
-            console.error('❌ 处理手势命令失败:', error);
-        }
     }
     
     resetScene() {
