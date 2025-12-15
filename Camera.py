@@ -384,7 +384,9 @@ class CameraHandTracker:
         
         frame_count = 0
         last_send_time = 0
-        
+        first_send_time = 0
+        first_time_flag = True
+
         try:
             while True:
                 ret, frame = cap.read()
@@ -412,6 +414,9 @@ class CameraHandTracker:
                 
                 # 每秒发送5次数据
                 current_time = time.time()
+                if first_time_flag:
+                    first_send_time = current_time
+                    first_time_flag = False
                 if current_time - last_send_time > 0.2:  # 5 FPS
                     self.send_coordinates(points, frame_size)
                     last_send_time = current_time
@@ -424,7 +429,7 @@ class CameraHandTracker:
                 
                 # 显示检测状态
                 valid_points = sum(1 for p in points if p[0] != 0 or p[1] != 0)
-                status = f"Camera {camera_index} | Frame: {frame_count} | Hands: {valid_points}/12"
+                status = f"Camera {camera_index} | Fps: {frame_count / (current_time - first_send_time) if current_time - first_send_time else 0:.1f} | Hands: {valid_points}/12"
                 cv2.putText(display_frame, status, (10, 30), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
                 
