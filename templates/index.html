@@ -37,10 +37,18 @@
                 <div class="camera-container">
                     <h3>实时手势画面</h3>
                     <div class="camera-feed">
-                        <!-- 使用 iframe 显示视频流 -->
-                        <iframe id="camera-video" 
+                        <!-- WebRTC 视频（低延迟） -->
+                        <video id="camera-video"
+                               autoplay
+                               playsinline
+                               muted
+                               style="width: 100%; height: 360px; border: none; border-radius: 8px; background:#000; object-fit: contain;">
+                        </video>
+
+                        <!-- 兜底：MJPEG（如果 WebRTC 失败，可手动打开测试） -->
+                        <iframe id="camera-mjpeg"
                                 src="http://localhost:5001/video_feed"
-                                style="width: 100%; height: 360px; border: none; border-radius: 8px;"
+                                style="width: 100%; height: 360px; border: none; border-radius: 8px; display:none;"
                                 allow="camera">
                         </iframe>
                         <div id="camera-overlay" class="camera-overlay" style="display: none;">

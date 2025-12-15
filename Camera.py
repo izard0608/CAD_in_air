@@ -4,8 +4,14 @@ import zmq
 import time
 import json
 import threading
-from flask import Flask, Response
+import asyncio
+from flask import Flask, Response, request
+from flask_socketio import SocketIO
 import numpy as np
+
+# WebRTC (aiortc)
+from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, VideoStreamTrack
+from av import VideoFrame
 
 class VideoStreamServer:
     def __init__(self, port=5001):
@@ -13,7 +19,23 @@ class VideoStreamServer:
         self.app = Flask(__name__)
         self.current_frame = None
         self.frame_lock = threading.Lock()
+
+        # Socket.IO（用于 WebRTC 信令）
+        self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode="threading")
+
+        # WebRTC: 维护每个客户端的 PeerConnection
+        self.peer_connections = {}  # sid -> RTCPeerConnection
+
+        # aiortc 需要 asyncio loop：单独开一个后台事件循环线程
+        self.loop = asyncio.new_event_loop()
+        threading.Thread(target=self._run_loop, daemon=True).start()
+
         self.setup_routes()
+        self.setup_webrtc_signaling()
+
+    def _run_loop(self):
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_forever()
         
     def setup_routes(self):
         @self.app.route('/video_feed')
@@ -62,12 +84,122 @@ class VideoStreamServer:
         """更新当前帧"""
         with self.frame_lock:
             self.current_frame = frame
+
+    # ===================== WebRTC =====================
+    class _OpenCVTrack(VideoStreamTrack):
+        """从 VideoStreamServer.current_frame 读取最新帧并推送为 WebRTC 视频轨"""
+        def __init__(self, server):
+            super().__init__()
+            self.server = server
+
+        async def recv(self):
+            pts, time_base = await self.next_timestamp()
+
+            with self.server.frame_lock:
+                frame = None if self.server.current_frame is None else self.server.current_frame.copy()
+
+            if frame is None:
+                await asyncio.sleep(0.01)
+                return await self.recv()
+
+            # BGR -> RGB
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            vf = VideoFrame.from_ndarray(rgb, format="rgb24")
+            vf.pts = pts
+            vf.time_base = time_base
+            return vf
+
+    def setup_webrtc_signaling(self):
+        """Socket.IO 信令：webrtc_offer / webrtc_answer / webrtc_ice"""
+
+        @self.socketio.on('webrtc_offer')
+        def _on_offer(offer):
+            sid = request.sid
+            fut = asyncio.run_coroutine_threadsafe(self._handle_offer(sid, offer), self.loop)
+            # 调试期：让异常直接抛出
+            fut.result()
+
+        @self.socketio.on('webrtc_ice')
+        def _on_ice(candidate):
+            sid = request.sid
+            fut = asyncio.run_coroutine_threadsafe(self._handle_ice(sid, candidate), self.loop)
+            fut.result()
+
+        @self.socketio.on('disconnect')
+        def _on_disconnect():
+            sid = request.sid
+            fut = asyncio.run_coroutine_threadsafe(self._cleanup_peer(sid), self.loop)
+            fut.result()
+
+    async def _handle_offer(self, sid, offer):
+        # 每个 sid 只保留一个连接
+        await self._cleanup_peer(sid)
+
+        pc = RTCPeerConnection()
+        self.peer_connections[sid] = pc
+
+        # 推送视频轨（来自 update_frame 的最新帧）
+        pc.addTrack(self._OpenCVTrack(self))
+
+        @pc.on('icecandidate')
+        def _on_local_ice(candidate):
+            if candidate is None:
+                return
+            self.socketio.emit('webrtc_ice', {
+                'candidate': candidate.candidate,
+                'sdpMid': candidate.sdpMid,
+                'sdpMLineIndex': candidate.sdpMLineIndex,
+            }, room=sid)
+
+        @pc.on('connectionstatechange')
+        async def _on_state_change():
+            if pc.connectionState in ('failed', 'closed', 'disconnected'):
+                await self._cleanup_peer(sid)
+
+        # 处理远端 offer
+        desc = RTCSessionDescription(sdp=offer['sdp'], type=offer['type'])
+        await pc.setRemoteDescription(desc)
+
+        # 创建 answer
+        answer = await pc.createAnswer()
+        await pc.setLocalDescription(answer)
+
+        self.socketio.emit('webrtc_answer', {
+            'sdp': pc.localDescription.sdp,
+            'type': pc.localDescription.type,
+        }, room=sid)
+
+    async def _handle_ice(self, sid, candidate):
+        pc = self.peer_connections.get(sid)
+        if pc is None or candidate is None:
+            return
+
+        # candidate 来自浏览器：{candidate, sdpMid, sdpMLineIndex, ...}
+        c = RTCIceCandidate(
+            candidate=candidate.get('candidate'),
+            sdpMid=candidate.get('sdpMid'),
+            sdpMLineIndex=candidate.get('sdpMLineIndex'),
+        )
+        try:
+            await pc.addIceCandidate(c)
+        except Exception as e:
+            print(f"addIceCandidate error: {e}")
+
+    async def _cleanup_peer(self, sid):
+        pc = self.peer_connections.pop(sid, None)
+        if pc is not None:
+            try:
+                await pc.close()
+            except Exception:
+                pass
     
     def run(self):
         """启动视频流服务器"""
         print(f"📹 视频流服务器运行在: http://localhost:{self.port}/video_feed")
+        print(f"📡 WebRTC 信令（Socket.IO）运行在: http://localhost:{self.port}")
         try:
-            self.app.run(host='0.0.0.0', port=self.port, threaded=True, debug=False, use_reloader=False)
+            # 必须用 socketio.run 才能同时支持 Socket.IO 信令
+            self.socketio.run(self.app, host='0.0.0.0', port=self.port, debug=False, use_reloader=False)
         except Exception as e:
             print(f"❌ 视频流服务器错误: {e}")
 

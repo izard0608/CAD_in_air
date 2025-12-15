@@ -29,24 +29,96 @@ class CameraManager {
         this.videoElement = null;
         this.overlayElement = null;
         this.isActive = false;
+
+        // WebRTC
+        this.pc = null;
+        this.signal = null;
     }
     
     async startCamera() {
         try {
-            console.log('🎥 连接视频流...');
+            console.log('🎥 连接视频流（WebRTC）...');
             
             this.videoElement = document.getElementById('camera-video');
             this.overlayElement = document.getElementById('camera-overlay');
+
+            // 如果模板里 camera-video 不是 <video>（例如被错误渲染成 <iframe>），
+            // 这里强制替换成 <video>，否则 WebRTC 的 srcObject 永远无法生效。
+
+
+            if (this.videoElement && this.videoElement.tagName !== 'VIDEO') {
+                console.warn(`⚠️ #camera-video 不是 <video>，而是 <${this.videoElement.tagName.toLowerCase()}>，将自动替换为 <video> 以启用 WebRTC`);
+                const oldEl = this.videoElement;
+
+                const newVideo = document.createElement('video');
+                newVideo.id = oldEl.id; // 保持同一个 id，避免其他代码找不到
+                newVideo.autoplay = true;
+                newVideo.playsInline = true;
+                newVideo.muted = true;
+
+                // 尽量继承原来的样式/类名/尺寸
+                newVideo.className = oldEl.className || '';
+                newVideo.style.cssText = oldEl.style && oldEl.style.cssText ? oldEl.style.cssText : 'width: 100%; height: 100%; object-fit: cover;';
+
+                // 替换 DOM
+                oldEl.replaceWith(newVideo);
+
+                this.videoElement = newVideo;
+            }
+
             
             if (!this.videoElement) {
                 throw new Error('未找到视频元素');
             }
 
-            // 直接设置 iframe 的 src
-            const streamURL = 'http://localhost:5001/video_feed';
-            console.log('设置视频流URL:', streamURL);
-            
-            this.videoElement.src = streamURL;
+            // 若重复连接，先清理
+            this.stopCamera();
+
+            // 5001（Camera.py）提供信令 + WebRTC 推流
+            this.signal = io('http://localhost:5001');
+
+            this.pc = new RTCPeerConnection({
+                iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+            });
+
+            // 收到后端视频轨
+            this.pc.ontrack = (ev) => {
+                if (this.videoElement) {
+                    this.videoElement.srcObject = ev.streams[0];
+                }
+            };
+
+            // 前端 ICE -> 后端
+            this.pc.onicecandidate = (ev) => {
+                if (ev.candidate && this.signal) {
+                    this.signal.emit('webrtc_ice', ev.candidate);
+                }
+            };
+
+            // 后端 answer / ICE -> 前端
+            this.signal.on('webrtc_answer', async (answer) => {
+                try {
+                    await this.pc.setRemoteDescription(answer);
+                } catch (e) {
+                    console.warn('setRemoteDescription failed:', e);
+                }
+            });
+
+            this.signal.on('webrtc_ice', async (candidate) => {
+                try {
+                    await this.pc.addIceCandidate(candidate);
+                } catch (e) {
+                    console.warn('addIceCandidate failed:', e);
+                }
+            });
+
+            // 只接收视频（后端推流）
+            this.pc.addTransceiver('video', { direction: 'recvonly' });
+
+            // 生成 offer 发给后端
+            const offer = await this.pc.createOffer();
+            await this.pc.setLocalDescription(offer);
+            this.signal.emit('webrtc_offer', this.pc.localDescription);
             
             // 隐藏覆盖层
             if (this.overlayElement) {
@@ -54,7 +126,7 @@ class CameraManager {
             }
             
             this.isActive = true;
-            console.log('✅ 视频流连接设置完成');
+            console.log('✅ WebRTC 视频连接已发起');
             
             return true;
             
@@ -66,8 +138,31 @@ class CameraManager {
     }
     
     stopCamera() {
-        if (this.videoElement) {
-            this.videoElement.src = '';
+        // 关闭 WebRTC
+        try {
+            if (this.pc) {
+                this.pc.ontrack = null;
+                this.pc.onicecandidate = null;
+                this.pc.close();
+            }
+        } catch (e) {
+            console.warn('关闭 WebRTC 失败:', e);
+        }
+
+        this.pc = null;
+
+        try {
+            if (this.signal) {
+                this.signal.disconnect();
+            }
+        } catch (e) {
+            console.warn('断开信令失败:', e);
+        }
+
+        this.signal = null;
+
+        if (this.videoElement && this.videoElement.tagName === 'VIDEO') {
+            this.videoElement.srcObject = null;
         }
         
         this.isActive = false;
@@ -95,7 +190,7 @@ class CameraManager {
                         ❌ 无法连接视频流
                     </div>
                     <div style="color: #ccc; margin-bottom: 15px; font-size: 0.9em;">
-                        请确保 Camera.py 正在运行<br>
+                        请确保 Camera.py 正在运行（5001）并已启用 WebRTC<br>
                         错误信息: ${error.message}
                     </div>
                     <div>
