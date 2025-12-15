@@ -46,11 +46,11 @@
                         </video>
 
                         <!-- 兜底：MJPEG（如果 WebRTC 失败，可手动打开测试） -->
-                        <iframe id="camera-mjpeg"
-                                src="http://localhost:5001/video_feed"
-                                style="width: 100%; height: 360px; border: none; border-radius: 8px; display:none;"
-                                allow="camera">
-                        </iframe>
+                        <!-- MJPEG 最适合用 <img> 展示（而不是 <iframe>） -->
+                        <img id="camera-mjpeg"
+                             src="http://localhost:5001/video_feed"
+                             alt="camera mjpeg"
+                             style="width: 100%; height: 360px; border: none; border-radius: 8px; display:none; object-fit: contain; background:#000;" />
                         <div id="camera-overlay" class="camera-overlay" style="display: none;">
                             <div class="overlay-text">
                                 <div>📷 视频流连接中...</div>
