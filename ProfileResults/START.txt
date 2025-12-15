@@ -1,0 +1,47 @@
+         247 function calls in 15.089 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   15.089   15.089 e:\Introduction to Engineering\PythonProject1\START.py:18(main)
+        5   15.047    3.009   15.047    3.009 {built-in method time.sleep}
+        5    0.000    0.000    0.040    0.008 e:\Introduction to Engineering\PythonProject1\START.py:9(run_command_in_new_terminal)
+        5    0.000    0.000    0.040    0.008 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:758(__init__)
+        5    0.000    0.000    0.040    0.008 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1354(_execute_child)
+        5    0.040    0.008    0.040    0.008 {built-in method _winapi.CreateProcess}
+       14    0.002    0.000    0.002    0.000 {built-in method builtins.print}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1227(_close_pipe_fds)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1065(__del__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:88(isabs)
+        5    0.000    0.000    0.000    0.000 {built-in method _warnings.warn}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_collections_abc.py:821(get)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\os.py:675(__getitem__)
+        5    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:151(splitdrive)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\contextlib.py:533(__exit__)
+       10    0.000    0.000    0.000    0.000 {built-in method _winapi.CloseHandle}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\contextlib.py:452(__init__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\os.py:747(encodekey)
+        5    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1481(_internal_poll)
+        5    0.000    0.000    0.000    0.000 {built-in method _winapi.WaitForSingleObject}
+       35    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:171(__init__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:196(Close)
+        5    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Profile.py:11(end)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\os.py:741(check_str)
+       10    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 {built-in method sys.exc_info}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:36(_get_bothseps)
+       10    0.000    0.000    0.000    0.000 {built-in method nt.fspath}
+        5    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+       10    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:237(_cleanup)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1260(_get_handles)
+        5    0.000    0.000    0.000    0.000 {built-in method sys.audit}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\contextlib.py:530(__enter__)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+

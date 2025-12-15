@@ -3,6 +3,9 @@ import time
 import sys
 import os
 
+import Profile
+# import cProfile
+
 def run_command_in_new_terminal(command, title):
     """在新终端窗口中运行命令"""
     if sys.platform == "win32":
@@ -39,4 +42,7 @@ def main():
     print("   3. 使用手势进行3D建模操作")
 
 if __name__ == "__main__":
+    cp = Profile.Profile()
+    cp.start()
     main()
+    cp.end("START.prof")
