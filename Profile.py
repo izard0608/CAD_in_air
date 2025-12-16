@@ -65,5 +65,5 @@ class Profile:
             f.write(s.getvalue())
  
         ps.dump_stats(prof_path)
-        
+
         system(f"python -m flameprof {prof_path} > {svg_path}")
