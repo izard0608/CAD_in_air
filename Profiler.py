@@ -3,9 +3,9 @@ from pstats import Stats
 from io import StringIO 
 from os import system, makedirs, path
 
-class Profile:
+class Profiler:
     """
-    Profile
+    Profiler
     A small helper class that wraps a profiler instance and collects, formats,
     and exports profiling results for a given filename.
     Attributes

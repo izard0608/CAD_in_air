@@ -3,7 +3,7 @@ import time
 import sys
 import os
 
-import Profile
+from Profiler import Profiler
 # import cProfile
 
 def run_command_in_new_terminal(command, title):
@@ -42,7 +42,7 @@ def main():
     print("   3. 使用手势进行3D建模操作")
 
 if __name__ == "__main__":
-    cp = Profile.Profile()
+    cp = Profiler()
     cp.start()
     main()
     cp.end("START.prof")
