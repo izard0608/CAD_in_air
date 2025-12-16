@@ -14,10 +14,10 @@
 
 - 示例：
 ```python
-    import Singleton
+    from Singleton import Singleton, singleton, SingletonMeta
 
-    s1 = Singleton.Singleton("第一个实例")
-    s2 = Singleton.Singleton("第二个实例")
+    s1 = Singleton("第一个实例")
+    s2 = Singleton("第二个实例")
 
     assert(s1 is s2)    # true, note: 与元类单例不同，简单单例每次调用初始化都会覆盖前一次的内容
 
