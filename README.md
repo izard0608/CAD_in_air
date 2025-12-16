@@ -65,3 +65,11 @@
     logger1 = Logger("application.log")
     logger2 = Logger("different.log")   # 该文件名会被忽略
 ```
+
+## ThreadLauncher类
+- 原先多console的运行方式无法正常使用单例，想要做全局变量只能用sql，所以改了一版多线程的
+- 目前除了```START.py```，```main.py```在主线程运行，其余文件都有单独线程
+- 改了启动顺序，把```main.py```放在了最后
+- 修改了```receive.py```中的服务器连接为等待到```main```启动完毕再尝试连接，适配新的启动顺序
+- 考虑到整体结构的改变，后续可能会直接优化掉```zmq```，改用```threading```的信号量或者其他线程库提供的方法
+- 懒得写doc，自己去看源文件（）
