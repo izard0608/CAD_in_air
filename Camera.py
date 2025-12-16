@@ -13,6 +13,8 @@ import numpy as np
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, VideoStreamTrack
 from av import VideoFrame
 
+from ModuleStatusList import ModuleStatusList as MSL
+
 class VideoStreamServer:
     def __init__(self, port=5001):
         self.port = port
@@ -382,6 +384,9 @@ class CameraHandTracker:
         print("💡 提示: 手部移动方向应该与标注点移动方向一致")
         print("按 'q' 键退出程序")
         
+        module_status_list = MSL()
+        module_status_list.set_ready("Camera.py")
+
         frame_count = 0
         last_send_time = 0
         first_send_time = 0

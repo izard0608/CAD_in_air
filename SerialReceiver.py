@@ -2,6 +2,8 @@ import serial
 import zmq
 import time
 
+from ModuleStatusList import ModuleStatusList as MSL
+
 # 串口配置
 SERIAL_PORTS = ["COM3", "COM4", "COM5", "/dev/ttyUSB0", "/dev/ttyACM0"]
 BAUD_RATE = 115200
@@ -20,7 +22,10 @@ for port in SERIAL_PORTS:
 
 if ser is None:
     print("❌ 所有串口连接失败，请检查设备连接")
-    exit(1)
+    module_status_list = MSL()
+    module_status_list.set_ready("SerialReceiver.py")
+    while True:
+        time.sleep(1)
 
 # ZeroMQ设置
 context = zmq.Context()
@@ -29,6 +34,8 @@ socket.connect("tcp://127.0.0.1:5555")
 print("📡 连接到数据融合端口: 5555")
 
 print("🚀 SerialReceiver 启动，开始读取VL53L5CX深度数据...")
+module_status_list = MSL()
+module_status_list.set_ready("SerialReceiver.py")
 
 frame_count = 0
 error_count = 0

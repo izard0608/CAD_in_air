@@ -3,6 +3,8 @@ import time
 import numpy as np
 import cv2
 
+from ModuleStatusList import ModuleStatusList as MSL
+
 context = zmq.Context()
 
 # 绑定端口 - 接收摄像头和ToF数据
@@ -126,6 +128,11 @@ def fuse_points_with_depth(camera_points, frame_size, pts_cam):
     return fused
 
 # ========= 主循环 =========
+module_status_list = MSL()
+module_status_list.set_ready("LocationCalculate.py")
+
+print(module_status_list.ready_dict)
+
 print("🔄 开始数据融合循环...")
 
 poller = zmq.Poller()

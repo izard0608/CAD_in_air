@@ -1,73 +1,193 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="1200" height="264"
+<svg version="1.1" width="1200" height="744"
      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <style type="text/css">
     .func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
 </style>
-<svg class="func_g" x="0.0006123666571604034" y="96" width="1198.9993876333428" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\START.py:18:main 100.00% (1 1 8.88e-05 15.0889915)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+<svg class="func_g" x="0.00035255329309338325" y="336" width="1199.000512432112" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\START.py:10:main 100.00% (1 1 4.0300000000000004e-05 29.272182700000002)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">main</text>
 </g></svg>
-<svg class="func_g" x="0.0006123666571604034" y="72" width="2.214622743170402" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\START.py:9:run_command_in_new_terminal 0.27% (5 5 9.42e-05 0.040421200000000004)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_command_in_new_terminal</text>
+<svg class="func_g" x="0.000565725051707987" y="312" width="282.98753571062525" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:15:launch_threads 23.67% (1 1 0.0012074000000000002 6.927442900000001)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">launch_threads</text>
 </g></svg>
-<svg class="func_g" x="0.0013678839614492126" y="48" width="2.197492382397369" height="23"><g>
-    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:758:__init__ 0.27% (5 5 7.93e-05 0.0402058)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
-</g></svg>
-<svg class="func_g" x="0.0018450527852105656" y="24" width="2.18785357215739" height="23"><g>
-    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1354:_execute_child 0.27% (5 5 0.00013790000000000002 0.040084600000000005)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_execute_child</text>
-</g></svg>
-<svg class="func_g" x="0.026936180101328384" y="0" width="2.15006975412922" height="23"><g>
-    <title>~:0:&lt;built-in method _winapi.CreateProcess&gt; 0.26% (5 5 0.039609500000000006 0.039609500000000006)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method _winapi.CreateProcess&gt;</text>
-</g></svg>
-<svg class="func_g" x="3.3473552043133514" y="72" width="1195.645582697095" height="23"><g>
-    <title>~:0:&lt;built-in method time.sleep&gt; 99.72% (5 5 15.0468202 15.0468202)</title>
+<svg class="func_g" x="0.17384566860710585" y="288" width="282.76467283590745" height="23"><g>
+    <title>~:0:&lt;built-in method time.sleep&gt; 23.65% (111 111 6.9220065 6.9220065)</title>
     <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method time.sleep&gt;</text>
 </g></svg>
-<svg class="func_g" x="0.06603221239484193" y="144" width="2.15006975412922" height="23"><g>
-    <title>~:0:&lt;built-in method _winapi.CreateProcess&gt; 0.26% (5 5 0.039609500000000006 0.039609500000000006)</title>
+<svg class="func_g" x="283.9881014356769" y="312" width="857.3517828821588" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:49:launch_main 71.53% (1 1 6.1e-06 20.9381829)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">launch_main</text>
+</g></svg>
+<svg class="func_g" x="283.9881014356769" y="288" width="857.351532815288" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:260:run_path 71.53% (1 1 2.6900000000000003e-05 20.9381768)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_path</text>
+</g></svg>
+<svg class="func_g" x="284.0170640986502" y="264" width="857.2326690625761" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:89:_run_module_code 71.52% (1 1 2.2700000000000003e-05 20.935277300000003)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_run_module_code</text>
+</g></svg>
+<svg class="func_g" x="284.017863492745" y="240" width="857.2307792129467" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:63:_run_code 71.52% (1 1 7.100000000000001e-06 20.9352312)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 190, 110)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_run_code</text>
+</g></svg>
+<svg class="func_g" x="284.017863492745" y="216" width="857.230410261826" height="23"><g>
+    <title>~:0:&lt;built-in method builtins.exec&gt; 71.52% (1 1 3.6000000000000003e-06 20.935222200000002)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method builtins.exec&gt;</text>
+</g></svg>
+<svg class="func_g" x="284.01788808948567" y="192" width="857.2302380846371" height="23"><g>
+    <title>main.py:1:&lt;module&gt; 71.52% (1 1 7.35999978906359e-05 20.93521800000002)</title>
+    <rect height="100%" width="100%" fill="rgb(57, 242, 168)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;module&gt;</text>
+</g></svg>
+<svg class="func_g" x="284.24474792817574" y="168" width="856.851608157077" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\flask_socketio\__init__.py:563:run 71.49% (1 1 2.2399999358019623e-05 20.925981900264723)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run</text>
+</g></svg>
+<svg class="func_g" x="284.24474792817574" y="144" width="856.8479145465191" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\flask\app.py:546:run 71.49% (1 1 5.539999841224495e-05 20.925891800267305)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run</text>
+</g></svg>
+<svg class="func_g" x="284.4081112808167" y="120" width="856.682107917638" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\werkzeug\serving.py:960:run_simple 71.47% (1 1 2.8499999183194604e-05 20.921847200383223)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 215, 125)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_simple</text>
+</g></svg>
+<svg class="func_g" x="284.4309247577915" y="96" width="856.4361077152471" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\werkzeug\serving.py:817:serve_forever 71.45% (1 1 1.4399999587298327e-05 20.915846400555207)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">serve_forever</text>
+</g></svg>
+<svg class="func_g" x="284.4309247577915" y="72" width="856.4325575856766" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\socketserver.py:215:serve_forever 71.45% (1 1 0.0004504999870887429 20.91575980055769)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">serve_forever</text>
+</g></svg>
+<svg class="func_g" x="284.4327736127987" y="48" width="856.4096744179365" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\selectors.py:320:select 71.45% (41 41 0.000680899980485516 20.91520160057369)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">select</text>
+</g></svg>
+<svg class="func_g" x="284.4327736127987" y="24" width="856.3724062563592" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\selectors.py:314:_select 71.45% (41 41 0.0003136999910094088 20.914292500599746)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_select</text>
+</g></svg>
+<svg class="func_g" x="284.4327736127987" y="0" width="856.3595462604436" height="23"><g>
+    <title>~:0:&lt;built-in method select.select&gt; 71.45% (41 41 20.913978800608735 20.913978800608735)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method select.select&gt;</text>
+</g></svg>
+<svg class="func_g" x="1142.3705933494468" y="312" width="56.6286195548289" height="23"><g>
+    <title>~:0:&lt;built-in method time.sleep&gt; 4.80% (2 2 1.4057623000000001 1.4057623000000001)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method time.sleep&gt;</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="384" width="856.3595708322301" height="23"><g>
+    <title>~:0:&lt;built-in method select.select&gt; 71.45% (41 41 20.913979400000002 20.913979400000002)</title>
     <rect height="100%" width="100%" fill="rgb(166, 166, 255)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method _winapi.CreateProcess&gt;</text>
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method select.select&gt;</text>
 </g></svg>
-<svg class="func_g" x="0.06603221239484193" y="168" width="2.15006975412922" height="23"><g>
-    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:1354:_execute_child 0.26% (5 5 0.039609500000000006 0.039609500000000006)</title>
-    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_execute_child</text>
+<svg class="func_g" x="0.9539272219727665" y="408" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\selectors.py:314:_select 71.45% (41 41 20.913979400000002 20.913979400000002)</title>
+    <rect height="100%" width="100%" fill="rgb(218, 218, 218)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_select</text>
 </g></svg>
-<svg class="func_g" x="0.06603221239484193" y="192" width="2.15006975412922" height="23"><g>
-    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\subprocess.py:758:__init__ 0.00% (5 5 0.00013790000000000002 0.040084600000000005)</title>
+<svg class="func_g" x="0.9539272219727665" y="432" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\selectors.py:320:select 0.00% (41 41 0.00031370000000000004 20.914293100000002)</title>
     <rect height="100%" width="100%" fill="rgb(225, 225, 225)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">select</text>
 </g></svg>
-<svg class="func_g" x="0.06603221239484193" y="216" width="2.15006975412922" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\START.py:9:run_command_in_new_terminal 0.00% (5 5 7.93e-05 0.0402058)</title>
+<svg class="func_g" x="0.9539272219727665" y="456" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\socketserver.py:215:serve_forever 0.00% (41 41 0.0006809 20.915202200000003)</title>
     <rect height="100%" width="100%" fill="rgb(225, 225, 225)" rx="2" ry="2" />
-    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_command_in_new_terminal</text>
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">serve_forever</text>
 </g></svg>
-<svg class="func_g" x="0.06603221239484193" y="240" width="2.15006975412922" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\START.py:18:main 0.00% (5 5 9.42e-05 0.040421200000000004)</title>
+<svg class="func_g" x="0.9539272219727665" y="480" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\werkzeug\serving.py:817:serve_forever 0.00% (1 1 0.00045050000000000005 20.9157604)</title>
+    <rect height="100%" width="100%" fill="rgb(225, 225, 225)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">serve_forever</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="504" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\werkzeug\serving.py:960:run_simple 0.00% (1 1 1.4400000000000001e-05 20.915847000000003)</title>
     <rect height="100%" width="100%" fill="rgb(197, 197, 197)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_simple</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="528" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\flask\app.py:546:run 0.00% (1 1 2.85e-05 20.921847800000002)</title>
+    <rect height="100%" width="100%" fill="rgb(218, 218, 218)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="552" width="856.3595708322301" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\flask_socketio\__init__.py:563:run 0.00% (1 1 5.5400000000000005e-05 20.925892400000002)</title>
+    <rect height="100%" width="100%" fill="rgb(218, 218, 218)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="576" width="856.3595708322301" height="23"><g>
+    <title>main.py:1:&lt;module&gt; 0.00% (1 1 2.2400000000000002e-05 20.9259825)</title>
+    <rect height="100%" width="100%" fill="rgb(204, 204, 204)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;module&gt;</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="600" width="856.3595708322301" height="23"><g>
+    <title>~:0:&lt;built-in method builtins.exec&gt; 0.00% (1 1 7.36e-05 20.935218600000002)</title>
+    <rect height="100%" width="100%" fill="rgb(197, 197, 197)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method builtins.exec&gt;</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="624" width="856.3583504353986" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:63:_run_code 0.00% (1 1 3.6000000000000003e-06 20.935222200000002)</title>
+    <rect height="100%" width="100%" fill="rgb(204, 204, 204)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_run_code</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="648" width="856.3583504353986" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:89:_run_module_code 0.00% (1 1 7.100000000000001e-06 20.9352312)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">_run_module_code</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="672" width="856.3583504353986" height="23"><g>
+    <title>D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:260:run_path 0.00% (1 1 2.2700000000000003e-05 20.935277300000003)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">run_path</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="696" width="856.3583504353986" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:49:launch_main 0.00% (1 1 2.6900000000000003e-05 20.9381768)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">launch_main</text>
+</g></svg>
+<svg class="func_g" x="0.9539272219727665" y="720" width="856.3583504353986" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\START.py:10:main 0.00% (1 1 6.1e-06 20.9381829)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">main</text>
 </g></svg>
-<svg class="func_g" x="3.351434997756511" y="144" width="1195.645582697095" height="23"><g>
-    <title>~:0:&lt;built-in method time.sleep&gt; 99.72% (5 5 15.0468202 15.0468202)</title>
+<svg class="func_g" x="858.3137276237892" y="384" width="340.39329239073635" height="23"><g>
+    <title>~:0:&lt;built-in method time.sleep&gt; 28.45% (113 113 8.327768800000001 8.327768800000001)</title>
     <rect height="100%" width="100%" fill="rgb(230, 230, 255)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method time.sleep&gt;</text>
 </g></svg>
-<svg class="func_g" x="3.351434997756511" y="168" width="1195.645582697095" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\START.py:18:main 99.72% (5 5 15.0468202 15.0468202)</title>
+<svg class="func_g" x="858.3137276237892" y="408" width="56.6286195548289" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\START.py:10:main 4.80% (2 2 1.4057623000000001 1.4057623000000001)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">main</text>
+</g></svg>
+<svg class="func_g" x="915.9423471786181" y="408" width="282.76467283590745" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:15:launch_threads 23.65% (111 111 6.9220065 6.9220065)</title>
     <rect height="100%" width="100%" fill="rgb(197, 197, 197)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">launch_threads</text>
+</g></svg>
+<svg class="func_g" x="915.9423471786181" y="432" width="282.76467283590745" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\START.py:10:main 0.00% (1 1 0.0012074000000000002 6.927442900000001)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">main</text>
 </g></svg>
 </svg>

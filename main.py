@@ -6,6 +6,9 @@ import time
 import logging
 import threading
 
+from ModuleStatusList import ModuleStatusList as MSL
+
+
 # 配置日志
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -201,8 +204,46 @@ def check_reset():
 
 if __name__ == '__main__':
     logger.info("启动手势3D建模服务器...")
-    socketio.run(app, 
-                host='0.0.0.0', 
-                port=5000, 
-                debug=True, 
+
+    def _server_ready_notifier(host='127.0.0.1', port=5000, path='/health', poll_interval=0.25):
+        """Background task: poll the local health endpoint until it responds,
+        then mark main.py as ready in ModuleStatusList and notify clients.
+        """
+        import urllib.request
+        import urllib.error
+
+        url = f'http://{host}:{port}{path}'
+        module_status_list = MSL()
+
+        while True:
+            try:
+                with urllib.request.urlopen(url, timeout=1) as resp:
+                    if getattr(resp, 'status', None) in (200, None):
+                        try:
+                            module_status_list.set_ready('main.py')
+                        except Exception:
+                            pass
+                        # Broadcast server ready to any connected clients
+                        try:
+                            socketio.emit('server_ready', {
+                                'message': 'server_ready',
+                                'timestamp': time.time()
+                            })
+                        except Exception:
+                            pass
+                        print('🔔 main.py ready — notified ModuleStatusList and clients')
+                        return
+            except Exception:
+                pass
+            time.sleep(poll_interval)
+
+    # start notifier in background so it can detect when the server is actually
+    # accepting requests; useful when running the server inside a launcher.
+    socketio.start_background_task(_server_ready_notifier)
+
+    socketio.run(app,
+                host='0.0.0.0',
+                port=5000,
+                debug=True,
+                use_reloader=False,
                 allow_unsafe_werkzeug=True)
