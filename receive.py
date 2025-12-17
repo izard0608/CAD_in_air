@@ -58,10 +58,9 @@ class GestureBackend:
             print("❌ 与服务器断开连接")
 
     def connect(self):
-        module_status_list = MSL()
-        while(not module_status_list.is_ready("main.py")):
-            print("⏳ 等待main.py就绪...")
-            time.sleep(0.05)
+        module_status_list = MSL().ready_dict
+        module_status_list[__file__].wait()
+        print("⏳ 等待main.py就绪...")
         try:
             self.sio.connect(self.server_url)
             print("✅ WebSocket连接成功")
@@ -283,7 +282,7 @@ if __name__ == "__main__":
         socket.connect("tcp://127.0.0.1:5557")
         print("✅ 连接到融合数据端口: 5557")
         module_status_list = MSL()
-        module_status_list.set_ready("receive.py")
+        module_status_list.set_ready(__file__)
         try:
             while True:
                 data = socket.recv_pyobj()

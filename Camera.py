@@ -385,7 +385,7 @@ class CameraHandTracker:
         print("按 'q' 键退出程序")
         
         module_status_list = MSL()
-        module_status_list.set_ready("Camera.py")
+        module_status_list.set_ready(__file__)
 
         frame_count = 0
         last_send_time = 0

@@ -129,9 +129,9 @@ def fuse_points_with_depth(camera_points, frame_size, pts_cam):
 
 # ========= 主循环 =========
 module_status_list = MSL()
-module_status_list.set_ready("LocationCalculate.py")
+module_status_list.set_ready(__file__)
 
-print(module_status_list.ready_dict)
+# print(module_status_list.ready_dict)
 
 print("🔄 开始数据融合循环...")
 

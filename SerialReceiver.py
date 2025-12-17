@@ -23,7 +23,7 @@ for port in SERIAL_PORTS:
 if ser is None:
     print("❌ 所有串口连接失败，请检查设备连接")
     module_status_list = MSL()
-    module_status_list.set_ready("SerialReceiver.py")
+    module_status_list.set_ready(__file__)
     while True:
         time.sleep(1)
 
@@ -35,7 +35,7 @@ print("📡 连接到数据融合端口: 5555")
 
 print("🚀 SerialReceiver 启动，开始读取VL53L5CX深度数据...")
 module_status_list = MSL()
-module_status_list.set_ready("SerialReceiver.py")
+module_status_list.set_ready(__file__)
 
 frame_count = 0
 error_count = 0

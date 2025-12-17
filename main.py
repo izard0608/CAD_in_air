@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
-import json
+from os import system, name
 import time
 import logging
-import threading
 
 from ModuleStatusList import ModuleStatusList as MSL
 
@@ -220,7 +219,7 @@ if __name__ == '__main__':
                 with urllib.request.urlopen(url, timeout=1) as resp:
                     if getattr(resp, 'status', None) in (200, None):
                         try:
-                            module_status_list.set_ready('main.py')
+                            module_status_list.set_ready(__file__)
                         except Exception:
                             pass
                         # Broadcast server ready to any connected clients
@@ -232,6 +231,9 @@ if __name__ == '__main__':
                         except Exception:
                             pass
                         print('🔔 main.py ready — notified ModuleStatusList and clients')
+                        system('cls' if name == 'nt' else 'clear')
+                        print("✅ 服务端就绪")
+                        print("🌐 请在浏览器打开: http://localhost:5000")
                         return
             except Exception:
                 pass
