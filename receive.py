@@ -4,8 +4,6 @@ import math
 import numpy as np
 from collections import deque
 import socketio
-import threading
-import json
 
 from ModuleStatusList import ModuleStatusList as MSL
 

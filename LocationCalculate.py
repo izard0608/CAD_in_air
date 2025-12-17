@@ -1,7 +1,6 @@
 import zmq
 import time
 import numpy as np
-import cv2
 
 from ModuleStatusList import ModuleStatusList as MSL
 

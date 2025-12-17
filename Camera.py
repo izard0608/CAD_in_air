@@ -2,7 +2,6 @@ import cv2
 import mediapipe as mp
 import zmq
 import time
-import json
 import threading
 import asyncio
 from flask import Flask, Response, request

@@ -1,5 +1,4 @@
 from time import sleep
-from os import system, name
 
 from ModuleStatusList import ModuleStatusList as MSL
 from Profiler import Profiler
