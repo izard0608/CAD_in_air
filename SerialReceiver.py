@@ -3,6 +3,13 @@ import zmq
 import time
 
 from ModuleStatusList import ModuleStatusList as MSL
+from Profiler import Profiler
+
+module_status_list = MSL()
+is_running = module_status_list.module_running
+
+cp = Profiler()
+cp.start()
 
 # 串口配置
 SERIAL_PORTS = ["COM3", "COM4", "COM5", "/dev/ttyUSB0", "/dev/ttyACM0"]
@@ -22,10 +29,8 @@ for port in SERIAL_PORTS:
 
 if ser is None:
     print("❌ 所有串口连接失败，请检查设备连接")
-    module_status_list = MSL()
-    module_status_list.set_ready(__file__)
-    while True:
-        time.sleep(1)
+else:
+    print("🚀 SerialReceiver 启动，开始读取VL53L5CX深度数据...")
 
 # ZeroMQ设置
 context = zmq.Context()
@@ -33,16 +38,17 @@ socket = context.socket(zmq.PUSH)
 socket.connect("tcp://127.0.0.1:5555")
 print("📡 连接到数据融合端口: 5555")
 
-print("🚀 SerialReceiver 启动，开始读取VL53L5CX深度数据...")
-module_status_list = MSL()
-module_status_list.set_ready(__file__)
+module_status_list.set_ready("SerialReceiver.py")
 
 frame_count = 0
 error_count = 0
 max_errors = 10
 
 try:
-    while True:
+    while is_running():
+        if ser is None:
+            continue
+
         # 读取START行
         start_line = ser.readline().decode('utf-8', errors='ignore').strip()
         if not start_line.startswith("START"):
@@ -102,8 +108,6 @@ try:
 
         time.sleep(0.01)
 
-except KeyboardInterrupt:
-    print("⏹️ 用户中断程序")
 except Exception as e:
     print(f"❌ SerialReceiver错误: {e}")
 finally:
@@ -112,3 +116,4 @@ finally:
     socket.close()
     context.term()
     print("✅ 串口资源已释放")
+    cp.end("SerialReceiver.prof")

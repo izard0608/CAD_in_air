@@ -59,7 +59,7 @@ class Profiler:
         sortby = "cumtime" 
         ps = Stats(self.pr, stream = s).sort_stats(sortby)
         ps.print_stats()
-        print(s.getvalue())
+        # print(s.getvalue())
 
         with open(txt_path, "w") as f:
             f.write(s.getvalue())

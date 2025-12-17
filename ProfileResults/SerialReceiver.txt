@@ -1,0 +1,74 @@
+         702050974 function calls in 57.011 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+702050788   56.970    0.000   56.970    0.000 e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:16(module_running)
+        9    0.018    0.002    0.018    0.002 {built-in method builtins.print}
+        1    0.016    0.016    0.016    0.016 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:243(term)
+        1    0.000    0.000    0.004    0.004 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:324(socket)
+        1    0.004    0.004    0.004    0.004 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:131(__init__)
+        1    0.002    0.002    0.002    0.002 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:90(__init__)
+        5    0.000    0.000    0.001    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:29(__init__)
+        5    0.000    0.000    0.001    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:180(__init__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:35(open)
+        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:9(set_ready)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:568(set)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:326(connect)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:389(notify_all)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:245(close)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:359(notify)
+        1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ctypes\__init__.py:474(WinError)
+        5    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\attrsettr.py:17(__setattr__)
+        5    0.000    0.000    0.000    0.000 {built-in method _ctypes.FormatError}
+        2    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:376(__setattr__)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:283(_rm_socket)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:116(discard)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:262(port)
+        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Profiler.py:46(end)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:471(exclusive)
+        2    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:359(__call__)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:264(__enter__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:283(baudrate)
+        5    0.000    0.000    0.000    0.000 {method 'mro' of 'type' objects}
+        5    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:279(_add_socket)
+        5    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:306(bytesize)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:86(add)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:270(_connect_cm)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:267(__exit__)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:37(__init__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:360(timeout)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:245(close)
+        2    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:678(__new__)
+        7    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:279(_is_owned)
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        1    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
+        5    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\types.py:176(__get__)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:57(__init__)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:379(write_timeout)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:332(parity)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:346(stopbits)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:399(inter_byte_timeout)
+        1    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:443(dsrdtr)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:320(exclusive)
+        2    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:419(xonxoff)
+        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:431(rtscts)
+        1    0.000    0.000    0.000    0.000 {method 'remove' of 'collections.deque' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:796(name)
+        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\typing.py:1737(cast)
+        1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+
+

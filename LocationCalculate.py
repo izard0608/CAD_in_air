@@ -3,6 +3,13 @@ import time
 import numpy as np
 
 from ModuleStatusList import ModuleStatusList as MSL
+from Profiler import Profiler
+
+module_status_list = MSL()
+is_running = module_status_list.module_running
+
+cp = Profiler()
+cp.start()
 
 context = zmq.Context()
 
@@ -127,8 +134,7 @@ def fuse_points_with_depth(camera_points, frame_size, pts_cam):
     return fused
 
 # ========= 主循环 =========
-module_status_list = MSL()
-module_status_list.set_ready(__file__)
+module_status_list.set_ready("LocationCalculate.py")
 
 # print(module_status_list.ready_dict)
 
@@ -144,7 +150,9 @@ last_tof_time = 0
 frame_count = 0
 
 try:
-    while True:
+    while is_running():
+        # print(f"{__file__}:", is_running())
+
         socks = dict(poller.poll(timeout=100))
 
         # 接收摄像头数据
@@ -196,8 +204,6 @@ try:
             print("⚠️ ToF数据超时")
             pts_cam = None
 
-except KeyboardInterrupt:
-    print("⏹️ 用户中断程序")
 except Exception as e:
     print(f"❌ 程序错误: {e}")
 finally:
@@ -205,3 +211,5 @@ finally:
     serial_socket.close()
     sender_socket.close()
     context.term()
+    print("⏹️ 数据融合中心已停止")
+    cp.end("LocationCalculate.prof")

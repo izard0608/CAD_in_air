@@ -4,9 +4,14 @@ from flask_cors import CORS
 from os import system, name
 import time
 import logging
+from sys import exit
 
 from ModuleStatusList import ModuleStatusList as MSL
+from Profiler import Profiler
 
+module_status_list = MSL()
+cp = Profiler()
+cp.start()
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -212,14 +217,13 @@ if __name__ == '__main__':
         import urllib.error
 
         url = f'http://{host}:{port}{path}'
-        module_status_list = MSL()
 
         while True:
             try:
                 with urllib.request.urlopen(url, timeout=1) as resp:
                     if getattr(resp, 'status', None) in (200, None):
                         try:
-                            module_status_list.set_ready(__file__)
+                            module_status_list.set_ready("main.py")
                         except Exception:
                             pass
                         # Broadcast server ready to any connected clients
@@ -231,7 +235,7 @@ if __name__ == '__main__':
                         except Exception:
                             pass
                         print('🔔 main.py ready — notified ModuleStatusList and clients')
-                        system('cls' if name == 'nt' else 'clear')
+                        # system('cls' if name == 'nt' else 'clear')
                         print("✅ 服务端就绪")
                         print("🌐 请在浏览器打开: http://localhost:5000")
                         return
@@ -244,8 +248,11 @@ if __name__ == '__main__':
     socketio.start_background_task(_server_ready_notifier)
 
     socketio.run(app,
-                host='0.0.0.0',
-                port=5000,
-                debug=True,
-                use_reloader=False,
-                allow_unsafe_werkzeug=True)
+            host='0.0.0.0',
+            port=5000,
+            debug=True,
+            use_reloader=False,
+            allow_unsafe_werkzeug=True)
+    print("⏹️ 用户中断服务器，正在退出...")
+    module_status_list.terminate()
+    cp.end("main.prof")

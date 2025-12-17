@@ -1,25 +1,56 @@
+from time import sleep, time
+print("time imported")
+t = time()
 import cv2
-import mediapipe as mp
-import zmq
-import time
-import threading
-import asyncio
+print("cv2 imported, used ", time() - t)
+t = time()
+from mediapipe.python.solutions import hands
+print("mp imported, used ", time() - t)
+t = time()
+from zmq import Context, PUSH
+print("zmq imported, used ", time() - t)
+t = time()
+from threading import Lock, Thread
+print("threading imported, used ", time() - t)
+t = time()
+from asyncio import new_event_loop, set_event_loop, run_coroutine_threadsafe, sleep as aio_sleep
+print("asyncio imported, used ", time() - t)
+t = time()
 from flask import Flask, Response, request
+print("flask imported, used ", time() - t)
+t = time()
 from flask_socketio import SocketIO
-import numpy as np
+print("flask_socketio imported, used ", time() - t)
+t = time()
+from numpy import zeros, uint8
+print("numpy imported, used ", time() - t)
+t = time()
 
 # WebRTC (aiortc)
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, VideoStreamTrack
+print("aiortc imported, used ", time() - t)
+t = time()
 from av import VideoFrame
+print("videoframe imported, used ", time() - t)
+t = time()
 
 from ModuleStatusList import ModuleStatusList as MSL
+print("msl imported, used ", time() - t)
+t = time()
+from Profiler import Profiler
+print("profiler imported, used ", time() - t)
+t = time()
+
+
+module_status_list = MSL()
+is_running = module_status_list.module_running
 
 class VideoStreamServer:
     def __init__(self, port=5001):
         self.port = port
         self.app = Flask(__name__)
         self.current_frame = None
-        self.frame_lock = threading.Lock()
+        self.frame_lock = Lock()
 
         # Socket.IO（用于 WebRTC 信令）
         self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode="threading")
@@ -28,14 +59,14 @@ class VideoStreamServer:
         self.peer_connections = {}  # sid -> RTCPeerConnection
 
         # aiortc 需要 asyncio loop：单独开一个后台事件循环线程
-        self.loop = asyncio.new_event_loop()
-        threading.Thread(target=self._run_loop, daemon=True).start()
+        self.loop = new_event_loop()
+        Thread(target=self._run_loop, daemon=True).start()
 
         self.setup_routes()
         self.setup_webrtc_signaling()
 
     def _run_loop(self):
-        asyncio.set_event_loop(self.loop)
+        set_event_loop(self.loop)
         self.loop.run_forever()
         
     def setup_routes(self):
@@ -70,7 +101,7 @@ class VideoStreamServer:
                         print(f"视频流编码错误: {e}")
                 else:
                     # 没有摄像头时显示测试画面
-                    test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                    test_frame = zeros((480, 640, 3), dtype=uint8)
                     cv2.putText(test_frame, "Camera Initializing...", (150, 240), 
                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
                     _, buffer = cv2.imencode('.jpg', test_frame)
@@ -79,7 +110,7 @@ class VideoStreamServer:
                            b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
                     frame_count += 1
             
-            time.sleep(0.033)  # ~30fps
+            sleep(0.033)  # ~30fps
     
     def update_frame(self, frame):
         """更新当前帧"""
@@ -100,7 +131,7 @@ class VideoStreamServer:
                 frame = None if self.server.current_frame is None else self.server.current_frame.copy()
 
             if frame is None:
-                await asyncio.sleep(0.01)
+                await aio_sleep(0.01)
                 return await self.recv()
 
             # BGR -> RGB
@@ -116,20 +147,20 @@ class VideoStreamServer:
         @self.socketio.on('webrtc_offer')
         def _on_offer(offer):
             sid = request.sid
-            fut = asyncio.run_coroutine_threadsafe(self._handle_offer(sid, offer), self.loop)
+            fut = run_coroutine_threadsafe(self._handle_offer(sid, offer), self.loop)
             # 调试期：让异常直接抛出
             fut.result()
 
         @self.socketio.on('webrtc_ice')
         def _on_ice(candidate):
             sid = request.sid
-            fut = asyncio.run_coroutine_threadsafe(self._handle_ice(sid, candidate), self.loop)
+            fut = run_coroutine_threadsafe(self._handle_ice(sid, candidate), self.loop)
             fut.result()
 
         @self.socketio.on('disconnect')
         def _on_disconnect():
             sid = request.sid
-            fut = asyncio.run_coroutine_threadsafe(self._cleanup_peer(sid), self.loop)
+            fut = run_coroutine_threadsafe(self._cleanup_peer(sid), self.loop)
             fut.result()
 
     async def _handle_offer(self, sid, offer):
@@ -206,7 +237,7 @@ class VideoStreamServer:
 
 class CameraHandTracker:
     def __init__(self):
-        self.mp_hands = mp.solutions.hands
+        self.mp_hands = hands
         self.hands = self.mp_hands.Hands(
             static_image_mode=False,
             max_num_hands=2,
@@ -215,8 +246,8 @@ class CameraHandTracker:
         )
         
         # ZeroMQ设置
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.PUSH)
+        self.context = Context()
+        self.socket = self.context.socket(PUSH)
         self.socket.connect("tcp://127.0.0.1:5556")
         print("🎥 摄像头手部追踪器初始化完成")
         
@@ -225,9 +256,9 @@ class CameraHandTracker:
         
         # 启动视频流服务器
         print("🔄 启动视频流服务器...")
-        server_thread = threading.Thread(target=self.video_server.run, daemon=True)
+        server_thread = Thread(target=self.video_server.run, daemon=True)
         server_thread.start()
-        time.sleep(2)  # 给服务器启动时间
+        sleep(2)  # 给服务器启动时间
 
     def find_working_camera(self):
         """查找可用的摄像头"""
@@ -238,7 +269,7 @@ class CameraHandTracker:
             cap = cv2.VideoCapture(camera_index)
             if cap.isOpened():
                 # 给摄像头初始化时间
-                time.sleep(1)
+                sleep(1)
                 # 尝试多次读取
                 for attempt in range(5):
                     ret, frame = cap.read()
@@ -246,7 +277,7 @@ class CameraHandTracker:
                         print(f"✅ 摄像头 {camera_index} 可用 - 分辨率: {frame.shape[1]}x{frame.shape[0]}")
                         cap.release()
                         return camera_index
-                    time.sleep(0.1)
+                    sleep(0.1)
                 cap.release()
                 print(f"❌ 摄像头 {camera_index} 可打开但无法读取帧")
             else:
@@ -314,7 +345,7 @@ class CameraHandTracker:
 
     def send_coordinates(self, points, frame_size):
         data = {
-            "timestamp": time.time(),
+            "timestamp": time(),
             "points": points,
             "type": "camera_coordinates",
             "frame_size": frame_size
@@ -358,11 +389,8 @@ class CameraHandTracker:
         camera_index = self.find_working_camera()
         if camera_index is None:
             print("🔄 无可用摄像头，视频流服务器继续运行（显示测试画面）")
-            try:
-                while True:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                print("⏹️ 用户中断程序")
+            while is_running():
+                sleep(1)
             return
         
         print(f"📷 使用摄像头索引: {camera_index}")
@@ -381,10 +409,8 @@ class CameraHandTracker:
         print("🎥 开始摄像头手部追踪...")
         print("📹 视频流地址: http://localhost:5001/video_feed")
         print("💡 提示: 手部移动方向应该与标注点移动方向一致")
-        print("按 'q' 键退出程序")
         
-        module_status_list = MSL()
-        module_status_list.set_ready(__file__)
+        module_status_list.set_ready("Camera.py")
 
         frame_count = 0
         last_send_time = 0
@@ -392,16 +418,16 @@ class CameraHandTracker:
         first_time_flag = True
 
         try:
-            while True:
+            while is_running():
                 ret, frame = cap.read()
                 if not ret:
                     print("❌ 无法读取摄像头帧")
                     # 显示错误画面
-                    error_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                    error_frame = zeros((480, 640, 3), dtype=uint8)
                     cv2.putText(error_frame, "Camera Error", (200, 240), 
                                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
                     self.video_server.update_frame(error_frame)
-                    time.sleep(0.1)
+                    sleep(0.1)
                     continue
                 
                 frame_count += 1
@@ -417,7 +443,7 @@ class CameraHandTracker:
                 points = self.process_frame(process_frame)
                 
                 # 每秒发送5次数据
-                current_time = time.time()
+                current_time = time()
                 if first_time_flag:
                     first_send_time = current_time
                     first_time_flag = False
@@ -446,11 +472,6 @@ class CameraHandTracker:
                 window_name = f'Hand Tracking - Camera {camera_index} (Natural Direction)'
                 cv2.imshow(window_name, display_frame)
                 
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-                    
-        except KeyboardInterrupt:
-            print("⏹️ 用户中断程序")
         except Exception as e:
             print(f"❌ 程序错误: {e}")
         finally:
@@ -461,5 +482,9 @@ class CameraHandTracker:
 
 if __name__ == "__main__":
     print("🚀 启动摄像头手部追踪系统...")
+    cp = Profiler()
+    cp.start()
     tracker = CameraHandTracker()
     tracker.run()
+    print("⏹️ 摄像头手部追踪系统已停止")
+    cp.end("Camera.prof")

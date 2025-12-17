@@ -6,6 +6,10 @@ from collections import deque
 import socketio
 
 from ModuleStatusList import ModuleStatusList as MSL
+from Profiler import Profiler
+
+module_status_list = MSL()
+is_running = module_status_list.module_running
 
 class GestureBackend:
     def __init__(self, server_url='http://localhost:5000'):
@@ -56,8 +60,8 @@ class GestureBackend:
             print("❌ 与服务器断开连接")
 
     def connect(self):
-        module_status_list = MSL().ready_dict
-        module_status_list[__file__].wait()
+        module_status = module_status_list.ready_dict["main.py"]
+        module_status.wait()
         print("⏳ 等待main.py就绪...")
         try:
             self.sio.connect(self.server_url)
@@ -271,6 +275,8 @@ class GestureBackend:
                             self.degree_history.clear()
 
 if __name__ == "__main__":
+    cp = Profiler()
+    cp.start()
     backend = GestureBackend()
 
     if backend.connect():
@@ -279,18 +285,19 @@ if __name__ == "__main__":
         socket = context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:5557")
         print("✅ 连接到融合数据端口: 5557")
-        module_status_list = MSL()
-        module_status_list.set_ready(__file__)
+
+        module_status_list.set_ready("receive.py")
         try:
-            while True:
+            while is_running():
+                # print(f"{__file__}:", is_running())
                 data = socket.recv_pyobj()
                 backend.process_data(data)
-        except KeyboardInterrupt:
-            print("⏹️ 用户停止程序")
         except Exception as e:
             print(f"❌ 数据接收错误: {e}")
         finally:
             socket.close()
             context.term()
+            print("⏹️ 手势识别已停止")
+            cp.end("receive.prof")
     else:
         print("❌ 无法连接到Web服务器，请确保main.py正在运行")

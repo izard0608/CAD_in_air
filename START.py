@@ -4,6 +4,8 @@ from ModuleStatusList import ModuleStatusList as MSL
 from Profiler import Profiler
 from ThreadLauncher import ThreadLauncher
 
+module_status_list = MSL()
+
 def main():
     print("🚀 启动手势3D建模系统...")
 
@@ -18,6 +20,8 @@ def main():
     
     try:
         while True:
+            # print("🟢 START.py 运行中，按 Ctrl+C 停止...")
+            # print(module_status_list.module_running())
             sleep(1)
     except KeyboardInterrupt:
         print("⏹️ 用户中断启动器，正在退出...")
@@ -27,4 +31,4 @@ if __name__ == "__main__":
     cp = Profiler()
     cp.start()
     main()
-    cp.end("START.prof")
+    cp.end(__file__)
