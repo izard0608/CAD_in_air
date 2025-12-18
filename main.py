@@ -256,3 +256,4 @@ if __name__ == '__main__':
     print("⏹️ 用户中断服务器，正在退出...")
     module_status_list.terminate()
     cp.end("main.prof")
+    module_status_list.profile_end("main.py")

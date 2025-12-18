@@ -1,45 +1,20 @@
 from time import sleep, time
-print("time imported")
-t = time()
 import cv2
-print("cv2 imported, used ", time() - t)
-t = time()
 from mediapipe.python.solutions import hands
-print("mp imported, used ", time() - t)
-t = time()
 from zmq import Context, PUSH
-print("zmq imported, used ", time() - t)
-t = time()
 from threading import Lock, Thread
-print("threading imported, used ", time() - t)
-t = time()
 from asyncio import new_event_loop, set_event_loop, run_coroutine_threadsafe, sleep as aio_sleep
-print("asyncio imported, used ", time() - t)
-t = time()
 from flask import Flask, Response, request
-print("flask imported, used ", time() - t)
-t = time()
 from flask_socketio import SocketIO
-print("flask_socketio imported, used ", time() - t)
-t = time()
 from numpy import zeros, uint8
-print("numpy imported, used ", time() - t)
-t = time()
 
 # WebRTC (aiortc)
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, VideoStreamTrack
-print("aiortc imported, used ", time() - t)
-t = time()
 from av import VideoFrame
-print("videoframe imported, used ", time() - t)
-t = time()
+
 
 from ModuleStatusList import ModuleStatusList as MSL
-print("msl imported, used ", time() - t)
-t = time()
 from Profiler import Profiler
-print("profiler imported, used ", time() - t)
-t = time()
 
 
 module_status_list = MSL()
@@ -488,3 +463,4 @@ if __name__ == "__main__":
     tracker.run()
     print("⏹️ 摄像头手部追踪系统已停止")
     cp.end("Camera.prof")
+    module_status_list.profile_end("Camera.py")

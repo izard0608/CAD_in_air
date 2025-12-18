@@ -117,3 +117,4 @@ finally:
     context.term()
     print("✅ 串口资源已释放")
     cp.end("SerialReceiver.prof")
+    module_status_list.profile_end("SerialReceiver.py")

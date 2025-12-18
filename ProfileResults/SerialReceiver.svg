@@ -1,18 +1,63 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" width="1200" height="72"
+<svg version="1.1" width="1200" height="120"
      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <style type="text/css">
     .func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
 </style>
-<svg class="func_g" x="0.5654280045908127" y="0" width="1198.0501910706694" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:16:module_running 99.92% (702050788 702050788 56.9698763 56.9698763)</title>
-    <rect height="100%" width="100%" fill="rgb(255, 90, 49)" rx="2" ry="2" />
+<svg class="func_g" x="1.1903499387396488" y="24" width="1.3384907522289917" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:243:term 0.19% (1 1 0.0151138 0.0151138)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 115, 64)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">term</text>
+</g></svg>
+<svg class="func_g" x="3.5288406909686403" y="24" width="2.4999534340616316" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:324:socket 0.29% (1 1 2.18e-05 0.022620400000000002)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">socket</text>
+</g></svg>
+<svg class="func_g" x="3.5355248339701553" y="0" width="2.48981891168665" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:131:__init__ 0.29% (1 1 0.0224904 0.022554900000000003)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="7.028794125030272" y="24" width="2.48981891168665" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:131:__init__ 0.29% (1 1 0.0224904 0.022554900000000003)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="10.605042719139284" y="24" width="1184.0436420770875" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:25:module_running 98.75% (4018256 4018256 7.659005100000001 7.659005100000001)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 165, 95)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">module_running</text>
 </g></svg>
-<svg class="func_g" x="0.47489183641047916" y="48" width="1198.0501910706694" height="23"><g>
-    <title>e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:16:module_running 99.92% (702050788 702050788 56.9698763 56.9698763)</title>
+<svg class="func_g" x="1195.6501701613383" y="24" width="3.349829838661627" height="23"><g>
+    <title>~:0:&lt;built-in method builtins.print&gt; 0.36% (9 9 0.0281132 0.0281132)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 140, 79)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method builtins.print&gt;</text>
+</g></svg>
+<svg class="func_g" x="1.1666459871694626" y="72" width="1.3384907522289917" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:243:term 0.19% (1 1 0.0151138 0.0151138)</title>
     <rect height="100%" width="100%" fill="rgb(166, 166, 255)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">term</text>
+</g></svg>
+<svg class="func_g" x="3.513909677087942" y="72" width="2.4798391148441103" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:131:__init__ 0.29% (1 1 0.0224904 0.022554900000000003)</title>
+    <rect height="100%" width="100%" fill="rgb(255, 240, 141)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">__init__</text>
+</g></svg>
+<svg class="func_g" x="3.513909677087942" y="96" width="2.4798391148441103" height="23"><g>
+    <title>d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:324:socket 0.29% (1 1 0.0224904 0.022554900000000003)</title>
+    <rect height="100%" width="100%" fill="rgb(211, 211, 211)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">socket</text>
+</g></svg>
+<svg class="func_g" x="7.076789985193927" y="72" width="1184.0436420770875" height="23"><g>
+    <title>e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:25:module_running 98.75% (4018256 4018256 7.659005100000001 7.659005100000001)</title>
+    <rect height="100%" width="100%" fill="rgb(198, 198, 255)" rx="2" ry="2" />
     <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">module_running</text>
+</g></svg>
+<svg class="func_g" x="1192.136121231271" y="72" width="3.349829838661627" height="23"><g>
+    <title>~:0:&lt;built-in method builtins.print&gt; 0.36% (9 9 0.0281132 0.0281132)</title>
+    <rect height="100%" width="100%" fill="rgb(198, 198, 255)" rx="2" ry="2" />
+    <text alignment-baseline="central" x="4.0" y="12.0" font-size="12px" fill="rgb(0,0,0)">&lt;built-in method builtins.print&gt;</text>
 </g></svg>
 </svg>

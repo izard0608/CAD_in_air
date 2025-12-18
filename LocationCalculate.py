@@ -213,3 +213,4 @@ finally:
     context.term()
     print("⏹️ 数据融合中心已停止")
     cp.end("LocationCalculate.prof")
+    module_status_list.profile_end("LocationCalculate.py")

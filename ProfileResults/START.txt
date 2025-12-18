@@ -1,91 +1,93 @@
-         420 function calls in 173.121 seconds
+         430 function calls in 110.672 seconds
 
    Ordered by: cumulative time
 
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-        1    0.000    0.000  173.121  173.121 e:\Introduction to Engineering\PythonProject1\START.py:9(main)
-        1    0.000    0.000  158.770  158.770 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:62(launch_threads)
-        9    0.000    0.000  158.489   17.610 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:589(wait)
-        9    0.000    0.000  158.489   17.610 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:288(wait)
-       36  158.489    4.402  158.489    4.402 {method 'acquire' of '_thread.lock' objects}
-        1    0.000    0.000   14.351   14.351 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:99(launch_main)
-        1    0.000    0.000   14.351   14.351 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:260(run_path)
-        1    0.000    0.000   13.977   13.977 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:89(_run_module_code)
-        1    0.000    0.000   13.977   13.977 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:63(_run_code)
-        1    0.000    0.000   13.977   13.977 {built-in method builtins.exec}
-        1    0.000    0.000   13.977   13.977 main.py:1(<module>)
-        1    0.000    0.000   13.977   13.977 e:\Introduction to Engineering\PythonProject1\Profiler.py:44(start)
-        1   13.977   13.977   13.977   13.977 {method 'enable' of '_lsprof.Profiler' objects}
-       15    0.249    0.017    0.249    0.017 {built-in method builtins.print}
-        1    0.000    0.000    0.219    0.219 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:248(_get_code_from_file)
-        4    0.172    0.043    0.172    0.043 {method 'read' of '_io.BufferedReader' objects}
-        1    0.000    0.000    0.155    0.155 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\pkgutil.py:407(get_importer)
-        1    0.000    0.000    0.140    0.140 <frozen zipimport>:64(__init__)
-        1    0.000    0.000    0.126    0.126 <frozen zipimport>:402(_read_directory)
-        3    0.109    0.036    0.109    0.036 {built-in method io.open_code}
-        5    0.000    0.000    0.096    0.019 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:64(run_script_in_thread)
-        5    0.000    0.000    0.096    0.019 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:916(start)
-        4    0.031    0.008    0.031    0.008 {method 'seek' of '_io.BufferedReader' objects}
-        1    0.000    0.000    0.031    0.031 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\pkgutil.py:40(read_code)
-        1    0.030    0.030    0.030    0.030 {built-in method nt.system}
-        2    0.030    0.015    0.030    0.015 {method '__exit__' of '_io._IOBase' objects}
-        2    0.000    0.000    0.030    0.015 <frozen importlib._bootstrap_external>:140(_path_stat)
-        2    0.030    0.015    0.030    0.015 {built-in method nt.stat}
-        1    0.000    0.000    0.015    0.015 <frozen importlib._bootstrap_external>:1628(path_hook_for_FileFinder)
-        1    0.000    0.000    0.015    0.015 <frozen importlib._bootstrap_external>:164(_path_isdir)
-        1    0.000    0.000    0.015    0.015 <frozen importlib._bootstrap_external>:150(_path_is_mode_type)
-        1    0.001    0.001    0.001    0.001 {built-in method builtins.compile}
+        1    0.017    0.017  110.672  110.672 e:\Introduction to Engineering\PythonProject1\START.py:21(main)
+        1    0.926    0.926  100.571  100.571 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:62(launch_threads)
+        9    0.000    0.000   99.355   11.039 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:589(wait)
+        9    0.000    0.000   99.355   11.039 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:288(wait)
+       36   99.354    2.760   99.354    2.760 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000   10.084   10.084 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:99(launch_main)
+        1    0.000    0.000   10.084   10.084 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:260(run_path)
+        1    0.000    0.000    9.802    9.802 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:89(_run_module_code)
+        1    0.000    0.000    9.802    9.802 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:63(_run_code)
+        1    0.000    0.000    9.802    9.802 {built-in method builtins.exec}
+        1    0.000    0.000    9.802    9.802 main.py:1(<module>)
+        1    0.000    0.000    9.802    9.802 e:\Introduction to Engineering\PythonProject1\Profiler.py:44(start)
+        1    9.802    9.802    9.802    9.802 {method 'enable' of '_lsprof.Profiler' objects}
+        5    0.000    0.000    0.269    0.054 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:64(run_script_in_thread)
+        5    0.001    0.000    0.269    0.054 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:916(start)
+       15    0.217    0.014    0.217    0.014 {built-in method builtins.print}
+        1    0.000    0.000    0.155    0.155 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\pkgutil.py:407(get_importer)
+        1    0.000    0.000    0.127    0.127 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:248(_get_code_from_file)
+        1    0.000    0.000    0.124    0.124 <frozen zipimport>:64(__init__)
+        1    0.015    0.015    0.108    0.108 <frozen zipimport>:402(_read_directory)
+        3    0.094    0.031    0.094    0.031 {built-in method io.open_code}
+        1    0.071    0.071    0.071    0.071 {built-in method nt.system}
+        4    0.047    0.012    0.047    0.012 {method 'read' of '_io.BufferedReader' objects}
+        2    0.000    0.000    0.047    0.023 <frozen importlib._bootstrap_external>:140(_path_stat)
+        2    0.047    0.023    0.047    0.023 {built-in method nt.stat}
+        3    0.046    0.015    0.046    0.015 {method 'tell' of '_io.BufferedReader' objects}
+        1    0.000    0.000    0.032    0.032 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\pkgutil.py:40(read_code)
+        1    0.000    0.000    0.031    0.031 <frozen importlib._bootstrap_external>:1628(path_hook_for_FileFinder)
+        1    0.000    0.000    0.031    0.031 <frozen importlib._bootstrap_external>:164(_path_isdir)
+        1    0.000    0.000    0.031    0.031 <frozen importlib._bootstrap_external>:150(_path_is_mode_type)
+        4    0.016    0.004    0.016    0.004 {method 'seek' of '_io.BufferedReader' objects}
+        2    0.014    0.007    0.014    0.007 {method '__exit__' of '_io._IOBase' objects}
+        1    0.002    0.002    0.002    0.002 {built-in method builtins.compile}
+        5    0.000    0.000    0.000    0.000 c:\Users\Izard\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydev_bundle\pydev_monkey.py:1203(pydev_start_new_thread)
         5    0.000    0.000    0.000    0.000 {built-in method _thread.start_new_thread}
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:827(__init__)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:241(basename)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:207(split)
-       11    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:151(splitdrive)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:104(join)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:545(__init__)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:236(__init__)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:827(__init__)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:104(join)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:545(__init__)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:241(basename)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:207(split)
+       11    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:151(splitdrive)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:236(__init__)
        14    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:564(abspath)
-        9    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:276(_acquire_restore)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:86(add)
-       32    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:490(normpath)
-        9    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:264(__enter__)
-        9    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:267(__exit__)
-       13    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
-        9    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:279(_is_owned)
-        3    0.000    0.000    0.000    0.000 {method 'tell' of '_io.BufferedReader' objects}
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:36(_get_bothseps)
+        9    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:276(_acquire_restore)
         3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1053(_handle_fromlist)
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:1301(_make_invoke_excepthook)
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:564(abspath)
+        9    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:279(_is_owned)
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:490(normpath)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:86(add)
+        9    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:264(__enter__)
+        9    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:267(__exit__)
+       32    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:55(__init__)
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ntpath.py:36(_get_bothseps)
+       13    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:1301(_make_invoke_excepthook)
+        9    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:273(_release_save)
         1    0.000    0.000    0.000    0.000 {method 'rfind' of 'bytes' objects}
        23    0.000    0.000    0.000    0.000 {built-in method nt.fspath}
-        9    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:273(_release_save)
         9    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:26(__init__)
+        5    0.000    0.000    0.000    0.000 c:\Users\Izard\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydev_bundle\pydev_monkey.py:1099(__init__)
        21    0.000    0.000    0.000    0.000 {built-in method builtins.len}
-        9    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
         1    0.000    0.000    0.000    0.000 {built-in method nt._getfullpathname}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:31(__enter__)
-        5    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
-        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\ThreadLauncher.py:55(__init__)
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:26(__init__)
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:31(__enter__)
         7    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
-        5    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
         1    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
-        9    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\os.py:817(fsdecode)
-        1    0.000    0.000    0.000    0.000 {built-in method builtins.max}
-        5    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:553(is_set)
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:52(__enter__)
-        5    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
         2    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Singleton.py:4(get_instance)
-        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Profiler.py:42(__init__)
-        2    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
-        1    0.000    0.000    0.000    0.000 D:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:48(__init__)
+        5    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+        9    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+        9    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
+        5    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\os.py:817(fsdecode)
         9    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Profiler.py:42(__init__)
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:52(__enter__)
+        5    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\runpy.py:48(__init__)
+        2    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
         5    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.max}
         1    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:553(is_set)
         1    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
-        1    0.000    0.000    0.000    0.000 {method 'lstrip' of 'str' objects}
         1    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'lstrip' of 'str' objects}
 
 

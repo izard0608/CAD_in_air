@@ -299,5 +299,6 @@ if __name__ == "__main__":
             context.term()
             print("⏹️ 手势识别已停止")
             cp.end("receive.prof")
+            module_status_list.profile_end("receive.py")
     else:
         print("❌ 无法连接到Web服务器，请确保main.py正在运行")
