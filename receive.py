@@ -7,12 +7,35 @@ import socketio
 
 from ModuleStatusList import ModuleStatusList as MSL
 from Profiler import Profiler
+from KalmanFilter import KalmanFilter
 
 module_status_list = MSL()
 is_running = module_status_list.module_running
 
 class GestureBackend:
     def __init__(self, server_url='http://localhost:5000'):
+        #四个指尖的滤波
+        # 左手拇指 (lt)
+        self.kf_lt_x = KalmanFilter()  # x坐标
+        self.kf_lt_y = KalmanFilter()  # y坐标
+        self.kf_lt_z = KalmanFilter()  # z坐标（深度）
+        
+        # 左手食指 (lf)
+        self.kf_lf_x = KalmanFilter()
+        self.kf_lf_y = KalmanFilter()
+        self.kf_lf_z = KalmanFilter()
+        
+        # 右手拇指 (rt)
+        self.kf_rt_x = KalmanFilter()
+        self.kf_rt_y = KalmanFilter()
+        self.kf_rt_z = KalmanFilter()
+        
+        # 右手食指 (rf)
+        self.kf_rf_x = KalmanFilter()
+        self.kf_rf_y = KalmanFilter()
+        self.kf_rf_z = KalmanFilter()
+
+
         self.DEBUG = True
         self.LOG_EVERY_N = 10
         self.HISTORY_N = 200
@@ -30,14 +53,14 @@ class GestureBackend:
         self.RIGHT_FORE_FINGER  = [9,10,11]
 
         # 阈值参数
-        self.TIME_THRESHOLD     = 0.8
-        self.MAXLEN             = 30
-        self.POSITION_THRESHOLD = 0.08
-        self.DIS_ON   = 0.04
-        self.DIS_OFF  = 0.08
-        self.MOVE_EPS = 0.02
-        self.DEGREE_THRESHOLD   = 60.0
-        self.DIS_THRESHOLD      = 2
+        self.TIME_THRESHOLD     = 0.8   # 时间阈值
+        self.MAXLEN             = 30    # 历史记录队列长度
+        self.POSITION_THRESHOLD = 0.08  # 稳定性判断阈值（抖动容忍）
+        self.DIS_ON   = 0.04            # 手指捏合距离阈值（开启画线）
+        self.DIS_OFF  = 0.08            # 手指捏合距离阈值（关闭画线）
+        self.MOVE_EPS = 0.02            # 线段更新的最小移动距离
+        self.DEGREE_THRESHOLD   = 60.0  # 手指角度阈值（建面）
+        self.DIS_THRESHOLD      = 2     # 左手建点的最大距离阈值
 
         # 状态
         self.edge_flag = 0
@@ -163,6 +186,31 @@ class GestureBackend:
         """检查点是否有效（非零值）"""
         return point[0] != 0.0 or point[1] != 0.0 or point[2] != 0.0
 
+    def filter_points(self, points):
+        """对四个指尖点进行卡尔曼滤波"""
+        filtered_points = []
+        for i, point in enumerate(points):
+            if i == self.LEFT_THUMB_FINGER[0]:  # 左手拇指
+                x = self.kf_lt_x.kalman_filter(point[0])
+                y = self.kf_lt_y.kalman_filter(point[1])
+                z = self.kf_lt_z.kalman_filter(point[2])
+            elif i == self.LEFT_FORE_FINGER[0]:  # 左手食指
+                x = self.kf_lf_x.kalman_filter(point[0])
+                y = self.kf_lf_y.kalman_filter(point[1])
+                z = self.kf_lf_z.kalman_filter(point[2])
+            elif i == self.RIGHT_THUMB_FINGER[0]:  # 右手拇指
+                x = self.kf_rt_x.kalman_filter(point[0])
+                y = self.kf_rt_y.kalman_filter(point[1])
+                z = self.kf_rt_z.kalman_filter(point[2])
+            elif i == self.RIGHT_FORE_FINGER[0]:  # 右手食指
+                x = self.kf_rf_x.kalman_filter(point[0])
+                y = self.kf_rf_y.kalman_filter(point[1])
+                z = self.kf_rf_z.kalman_filter(point[2])
+            else:
+                x, y, z = point
+            filtered_points.append([x, y, z])
+        return filtered_points
+
     def process_data(self, data):
         self._frame += 1
         timestamp = data.get("timestamp", time.time())
@@ -176,6 +224,8 @@ class GestureBackend:
         if self._frame % self.LOG_EVERY_N == 0:
             valid_points = sum(1 for p in points if self.is_valid_point(p))
             print(f"🎯 处理数据帧 #{self._frame}, 有效点: {valid_points}/12")
+
+        points = self.filter_points(points) # 滤波处理
 
         # 左手：稳定建点
         lt_tip = points[self.LEFT_THUMB_FINGER[0]]
