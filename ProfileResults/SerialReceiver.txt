@@ -1,73 +1,101 @@
-         4018437 function calls in 7.733 seconds
+         457097 function calls in 783.728 seconds
 
    Ordered by: cumulative time
 
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-  4018256    7.659    0.000    7.659    0.000 e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:25(module_running)
-        9    0.028    0.003    0.028    0.003 {built-in method builtins.print}
-        1    0.000    0.000    0.023    0.023 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:324(socket)
-        1    0.022    0.022    0.023    0.023 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:131(__init__)
-        1    0.015    0.015    0.015    0.015 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:243(term)
-        1    0.006    0.006    0.006    0.006 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:90(__init__)
-        5    0.000    0.000    0.002    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:29(__init__)
-        5    0.000    0.000    0.001    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:180(__init__)
-        5    0.001    0.000    0.001    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:35(open)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:326(connect)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:245(close)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\ctypes\__init__.py:474(WinError)
-        5    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
-        5    0.000    0.000    0.000    0.000 {built-in method _ctypes.FormatError}
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\attrsettr.py:17(__setattr__)
-        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\ModuleStatusList.py:11(set_ready)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:568(set)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:279(_add_socket)
-        2    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:376(__setattr__)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:86(add)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialwin32.py:471(exclusive)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\context.py:283(_rm_socket)
-        1    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:389(notify_all)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:262(port)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:359(notify)
-        2    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:359(__call__)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:283(baudrate)
+        1  667.601  667.601  667.601  667.601 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\context.py:243(term)
+     1180    0.121    0.000  113.895    0.097 {method 'readline' of '_io._IOBase' objects}
+    36662  113.446    0.003  113.774    0.003 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:262(read)
+      118    2.090    0.018    2.090    0.018 {built-in method time.sleep}
+    36662    0.159    0.000    0.218    0.000 E:\Anaconda\envs\test\lib\ctypes\__init__.py:48(create_string_buffer)
+   219980    0.091    0.000    0.091    0.000 {built-in method _ctypes.byref}
+      118    0.003    0.000    0.061    0.001 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:992(send_json)
+    73565    0.048    0.000    0.048    0.000 {built-in method builtins.isinstance}
+      118    0.040    0.000    0.040    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:623(send)
+       18    0.023    0.001    0.023    0.001 {built-in method builtins.print}
+    36662    0.019    0.000    0.019    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:355(timeout)
+      944    0.017    0.000    0.019    0.000 SerialReceiver.py:72(<listcomp>)
+      118    0.001    0.000    0.018    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\utils\jsonapi.py:20(dumps)
+        3    0.000    0.000    0.018    0.006 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:29(__init__)
+        3    0.000    0.000    0.018    0.006 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:180(__init__)
+        3    0.000    0.000    0.017    0.006 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:35(open)
+        1    0.017    0.017    0.017    0.017 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:100(_reconfigure_port)
+      118    0.001    0.000    0.016    0.000 E:\Anaconda\envs\test\lib\json\__init__.py:183(dumps)
+      118    0.002    0.000    0.015    0.000 E:\Anaconda\envs\test\lib\json\encoder.py:182(encode)
+      118    0.013    0.000    0.013    0.000 E:\Anaconda\envs\test\lib\json\encoder.py:204(iterencode)
+    36662    0.012    0.000    0.012    0.000 {built-in method sys.audit}
+     1180    0.005    0.000    0.005    0.000 {method 'decode' of 'bytes' objects}
+     8734    0.004    0.000    0.004    0.000 {method 'strip' of 'str' objects}
+     1180    0.004    0.000    0.004    0.000 {method 'split' of 'str' objects}
+        1    0.000    0.000    0.004    0.004 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\context.py:324(socket)
+        1    0.004    0.004    0.004    0.004 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:131(__init__)
+        3    0.000    0.000    0.002    0.001 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:245(close)
+        1    0.002    0.002    0.002    0.002 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:229(_close)
+        1    0.002    0.002    0.002    0.002 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\context.py:90(__init__)
+     1181    0.001    0.000    0.001    0.000 {built-in method builtins.len}
+      118    0.001    0.000    0.001    0.000 {method 'endswith' of 'str' objects}
+      121    0.001    0.000    0.001    0.000 {method 'startswith' of 'str' objects}
+      944    0.001    0.000    0.001    0.000 {method 'append' of 'list' objects}
+      119    0.001    0.000    0.001    0.000 E:\CADtune\CAD_in_air\ModuleStatusList.py:25(module_running)
+      118    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:245(close)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:326(connect)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:471(exclusive)
+      118    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:450(_cancel_overlapped_io)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:463(cancel_read)
+        2    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\ctypes\__init__.py:474(WinError)
+        1    0.000    0.000    0.000    0.000 E:\CADtune\CAD_in_air\ModuleStatusList.py:11(set_ready)
+        5    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\attrsettr.py:17(__setattr__)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:568(set)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\_weakrefset.py:39(_remove)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\context.py:283(_rm_socket)
+        2    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:431(rtscts)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:389(notify_all)
+        2    0.000    0.000    0.000    0.000 {built-in method _ctypes.FormatError}
+        2    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:376(__setattr__)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\_weakrefset.py:116(discard)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:359(notify)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialwin32.py:467(cancel_write)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:262(port)
+        2    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\enum.py:359(__call__)
+        1    0.000    0.000    0.000    0.000 E:\CADtune\CAD_in_air\Profiler.py:46(end)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:264(__enter__)
         5    0.000    0.000    0.000    0.000 {method 'mro' of 'type' objects}
-        1    0.000    0.000    0.000    0.000 e:\Introduction to Engineering\PythonProject1\Profiler.py:46(end)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:270(_connect_cm)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:264(__enter__)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:306(bytesize)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:116(discard)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:360(timeout)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\_weakrefset.py:37(__init__)
-        5    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\types.py:176(__get__)
-        7    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
-        2    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:678(__new__)
+        2    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\context.py:279(_add_socket)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\_weakrefset.py:37(__init__)
         1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:332(parity)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:279(_is_owned)
-        5    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\zmq\sugar\socket.py:57(__init__)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:346(stopbits)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:379(write_timeout)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:399(inter_byte_timeout)
-        5    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:443(dsrdtr)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:320(exclusive)
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\threading.py:267(__exit__)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:283(baudrate)
         3    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:419(xonxoff)
-        5    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\site-packages\serial\serialutil.py:431(rtscts)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:320(exclusive)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\_weakrefset.py:86(add)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:270(_connect_cm)
+        2    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\enum.py:678(__new__)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:306(bytesize)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:279(_is_owned)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\types.py:176(__get__)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:360(timeout)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:443(dsrdtr)
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\zmq\sugar\socket.py:57(__init__)
+        3    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\threading.py:267(__exit__)
         1    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
-        2    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.max}
         1    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
-        1    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\enum.py:796(name)
-        1    0.000    0.000    0.000    0.000 {built-in method builtins.len}
-        1    0.000    0.000    0.000    0.000 {method 'remove' of 'collections.deque' objects}
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:346(stopbits)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:379(write_timeout)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:399(inter_byte_timeout)
+        2    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:419(xonxoff)
+        3    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\site-packages\serial\serialutil.py:332(parity)
+        1    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
-        1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\enum.py:796(name)
+        1    0.000    0.000    0.000    0.000 {method 'remove' of 'collections.deque' objects}
         1    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
-        1    0.000    0.000    0.000    0.000 d:\Program Files\Anaconda3\envs\EngineeringIntro\lib\typing.py:1737(cast)
+        1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 E:\Anaconda\envs\test\lib\typing.py:1737(cast)
 
 

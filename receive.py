@@ -56,11 +56,12 @@ class GestureBackend:
         self.TIME_THRESHOLD     = 0.8   # 时间阈值
         self.MAXLEN             = 30    # 历史记录队列长度
         self.POSITION_THRESHOLD = 0.08  # 稳定性判断阈值（抖动容忍）
-        self.DIS_ON   = 0.04            # 手指捏合距离阈值（开启画线）
+        self.DIS_ON   = 0.02            # 手指捏合距离阈值（开启画线）
         self.DIS_OFF  = 0.08            # 手指捏合距离阈值（关闭画线）
         self.MOVE_EPS = 0.02            # 线段更新的最小移动距离
         self.DEGREE_THRESHOLD   = 60.0  # 手指角度阈值（建面）
-        self.DIS_THRESHOLD      = 2     # 左手建点的最大距离阈值
+        self.DIS_THRESHOLD      = 0.15  # 左手建点的最大距离阈值（仅此修改：2 → 0.15）
+
 
         # 状态
         self.edge_flag = 0
@@ -106,11 +107,23 @@ class GestureBackend:
         return obj
 
     def send_command(self, command_type, parameters):
-        # 命令冷却
+        """
+        发送手势命令到前端
+        
+        冷却策略：
+        - start_drawing_line, finish_drawing_line, start_drawing_point: 不受冷却限制（状态转移必须执行）
+        - update_drawing_line: 受冷却限制，避免过频繁更新
+        - create_plane: 不受冷却限制
+        """
         current_time = time.time()
-        if current_time - self.last_command_time < self.command_cooldown:
-            return
-            
+        
+        # 决定是否应用冷却
+        should_apply_cooldown = command_type == 'update_drawing_line'
+        
+        if should_apply_cooldown:
+            if current_time - self.last_command_time < self.command_cooldown:
+                return  # 冷却中，丢弃
+        
         self.last_command_time = current_time
         
         params = dict(parameters)
@@ -223,64 +236,86 @@ class GestureBackend:
 
         if self._frame % self.LOG_EVERY_N == 0:
             valid_points = sum(1 for p in points if self.is_valid_point(p))
-            print(f"🎯 处理数据帧 #{self._frame}, 有效点: {valid_points}/12")
+            print(f"🎯 处理数据帧 #{self._frame}, 有效点: {valid_points}/12, edge_flag: {self.edge_flag}")
+            # 调试：打印前几个点的坐标范围
+            if valid_points > 0:
+                rt = points[self.RIGHT_THUMB_FINGER[0]]
+                ri = points[self.RIGHT_FORE_FINGER[0]]
+                right_dist = self.distance(rt, ri)
+                print(f"   右手距离: {right_dist:.4f} (DIS_ON:{self.DIS_ON}, DIS_OFF:{self.DIS_OFF}, 历史: {len(self.right_history)})")
+                lt = points[self.LEFT_THUMB_FINGER[0]]
+                li = points[self.LEFT_FORE_FINGER[0]]
+                left_dist = self.distance(lt, li)
+                print(f"   左手距离: {left_dist:.4f} (DIS_THRESHOLD:{self.DIS_THRESHOLD}, 历史: {len(self.left_history)})")
 
         points = self.filter_points(points) # 滤波处理
 
-        # 左手：稳定建点
+        # 左手：简单的建点逻辑 - 拇指和食指捏合
         lt_tip = points[self.LEFT_THUMB_FINGER[0]]
         li_tip = points[self.LEFT_FORE_FINGER[0]]
         
         if self.is_valid_point(lt_tip) and self.is_valid_point(li_tip):
-            d = self.distance(lt_tip, li_tip)
-            self.left_history.append((timestamp, d, lt_tip, li_tip))
+            left_dist = self.distance(lt_tip, li_tip)
+            self.left_history.append((timestamp, left_dist, lt_tip, li_tip))
             
             if len(self.left_history) >= 5:
                 times = [x[0] for x in self.left_history]
                 if times[-1] - times[0] >= self.TIME_THRESHOLD:
-                    dvals = [x[1] for x in self.left_history]
-                    if max(dvals) - min(dvals) < self.POSITION_THRESHOLD and d < self.DIS_THRESHOLD:
+                    distances = [x[1] for x in self.left_history]
+                    dist_variation = max(distances) - min(distances)
+                    
+                    # 条件：距离稳定 + 捏合足够紧
+                    if dist_variation < self.POSITION_THRESHOLD and left_dist < self.DIS_THRESHOLD:
                         new_node = self._mid(lt_tip, li_tip)
                         self.send_command('start_drawing_point', {'position': new_node})
+                        if self._frame % self.LOG_EVERY_N == 0:
+                            print(f"✅ 左手建点成功")
                         self.left_history.clear()
 
-        # 右手：实时画线
+        # 右手：简单的画线逻辑 - 拇指和食指捏合
         rt_tip = points[self.RIGHT_THUMB_FINGER[0]]
         ri_tip = points[self.RIGHT_FORE_FINGER[0]]
         
         if self.is_valid_point(rt_tip) and self.is_valid_point(ri_tip):
-            d = self.distance(rt_tip, ri_tip)
+            right_dist = self.distance(rt_tip, ri_tip)
             center = self._mid(rt_tip, ri_tip)
 
-            self.right_history.append((timestamp, d, center))
+            self.right_history.append((timestamp, right_dist, center))
 
             if self.edge_flag == 0:
-                # 开始画线：稳定捏合
+                # 状态：未画线，等待开始
                 if len(self.right_history) >= 5:
                     times = [x[0] for x in self.right_history]
                     if times[-1] - times[0] >= self.TIME_THRESHOLD:
-                        dvals = [x[1] for x in self.right_history]
-                        if max(dvals) - min(dvals) < self.POSITION_THRESHOLD and d < self.DIS_ON:
+                        distances = [x[1] for x in self.right_history]
+                        dist_variation = max(distances) - min(distances)
+                        
+                        # 条件：距离稳定 + 捏合足够紧
+                        if dist_variation < self.POSITION_THRESHOLD and right_dist < self.DIS_ON:
                             start_node = self.right_history[-1][2]
                             self.send_command('start_drawing_line', {'position': start_node})
                             self.edge_flag = 1
                             self._last_center = start_node
                             self.right_history.clear()
+                            if self._frame % self.LOG_EVERY_N == 0:
+                                print(f"✅ 开始画线")
             else:
-                # 画线中
-                if d > self.DIS_OFF:
-                    # 松手结束画线
-                    end_node = center
-                    self.send_command('finish_drawing_line', {'position': end_node})
+                # 状态：正在画线
+                if right_dist > self.DIS_OFF:
+                    # 松手了
+                    self.send_command('finish_drawing_line', {'position': center})
                     self.edge_flag = 0
                     self._last_center = None
                     self.right_history.clear()
+                    if self._frame % self.LOG_EVERY_N == 0:
+                        print(f"✅ 结束画线")
                 else:
-                    # 移动更新
+                    # 继续捏合，更新位置
                     if (self._last_center is None or 
                         self.distance(center, self._last_center) > self.MOVE_EPS):
                         self.send_command('update_drawing_line', {'position': center})
                         self._last_center = center
+
 
         # 双手角度：建面
         if (self.is_valid_point(points[self.LEFT_FORE_FINGER[1]]) and 

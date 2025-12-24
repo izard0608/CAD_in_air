@@ -11,9 +11,16 @@ function mapToWorld(pos) {
   const y = pos[1] ?? 0;
   const z = pos[2] ?? 1;
 
+  // 假设输入坐标范围是 [0, 1]（归一化坐标）
+  // 需要映射到世界坐标系
   const worldX = (x - 0.5) * WORLD_SCALE;
-  const worldY = (0.5 - y) * WORLD_SCALE;
+  const worldY = (0.5 - y) * WORLD_SCALE;  // Y轴翻转（屏幕Y轴向下）
   const worldZ = (z - 1.0) * (WORLD_SCALE * 0.2);
+
+  // 调试日志
+  if (Math.random() < 0.05) {  // 5%概率打印，避免过量日志
+    console.log(`📍 坐标映射: 输入[${x.toFixed(3)}, ${y.toFixed(3)}, ${z.toFixed(3)}] → 输出[${worldX.toFixed(3)}, ${worldY.toFixed(3)}, ${worldZ.toFixed(3)}]`);
+  }
 
   return [worldX, worldY, worldZ];
 }
