@@ -234,10 +234,10 @@ if __name__ == '__main__':
                             })
                         except Exception:
                             pass
-                        print('🔔 main.py ready — notified ModuleStatusList and clients')
+                        print(' main.py ready — notified ModuleStatusList and clients')
                         # system('cls' if name == 'nt' else 'clear')
-                        print("✅ 服务端就绪")
-                        print("🌐 请在浏览器打开: http://localhost:5000")
+                        print(" 服务端就绪")
+                        print(" 请在浏览器打开: http://localhost:5000")
                         return
             except Exception:
                 pass
@@ -253,7 +253,7 @@ if __name__ == '__main__':
             debug=True,
             use_reloader=False,
             allow_unsafe_werkzeug=True)
-    print("⏹️ 用户中断服务器，正在退出...")
+    print(" 用户中断服务器，正在退出...")
     module_status_list.terminate()
     cp.end("main.prof")
     module_status_list.profile_end("main.py")

@@ -79,21 +79,21 @@ class ThreadLauncher:
 
         for program, title in self.programs:
             script_path = join(program)
-            print(f"▶️ 启动 {title} ({program}) as thread...")
+            print(f" 启动 {title} ({program}) as thread...")
             t = run_script_in_thread(script_path)
             thread_append((program, t))
 
             # 等待模块在其线程中标记为就绪
-            print(f"⏳ 等待 {title} ({program}) 就绪...")
+            print(f" 等待 {title} ({program}) 就绪...")
             msl[program].wait()
-            print(f"✅ {title} ({program}) ready.")
+            print(f" {title} ({program}) ready.")
         
         system('cls' if name == 'nt' else 'clear')
-        print("✅ 所有独立线程已启动")
+        print(" 所有独立线程已启动")
         
         for program, title in self.target_rely_on_main or []:
             script_path = join(program)
-            print(f"▶️ 启动 {title} ({program}) as thread(relying on main)...")
+            print(f" 启动 {title} ({program}) as thread(relying on main)...")
             t = run_script_in_thread(script_path)
 
     def launch_main(self):

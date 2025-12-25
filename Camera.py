@@ -202,13 +202,13 @@ class VideoStreamServer:
     
     def run(self):
         """启动视频流服务器"""
-        print(f"📹 视频流服务器运行在: http://localhost:{self.port}/video_feed")
-        print(f"📡 WebRTC 信令（Socket.IO）运行在: http://localhost:{self.port}")
+        print(f" 视频流服务器运行在: http://localhost:{self.port}/video_feed")
+        print(f" WebRTC 信令（Socket.IO）运行在: http://localhost:{self.port}")
         try:
             # 必须用 socketio.run 才能同时支持 Socket.IO 信令
             self.socketio.run(self.app, host='0.0.0.0', port=self.port, debug=False, use_reloader=False)
         except Exception as e:
-            print(f"❌ 视频流服务器错误: {e}")
+            print(f" 视频流服务器错误: {e}")
 
 class CameraHandTracker:
     def __init__(self):
@@ -224,20 +224,20 @@ class CameraHandTracker:
         self.context = Context()
         self.socket = self.context.socket(PUSH)
         self.socket.connect("tcp://127.0.0.1:5556")
-        print("🎥 摄像头手部追踪器初始化完成")
+        print(" 摄像头手部追踪器初始化完成")
         
         # 视频流服务器
         self.video_server = VideoStreamServer(port=5001)
         
         # 启动视频流服务器
-        print("🔄 启动视频流服务器...")
+        print(" 启动视频流服务器...")
         server_thread = Thread(target=self.video_server.run, daemon=True)
         server_thread.start()
         sleep(2)  # 给服务器启动时间
 
     def find_working_camera(self):
         """查找可用的摄像头"""
-        print("🔍 查找可用摄像头...")
+        print(" 查找可用摄像头...")
         # 优先尝试摄像头1（外置），如果不行就用摄像头0（内置）
         for camera_index in [1, 0]:
             print(f"尝试摄像头索引: {camera_index}")
@@ -249,16 +249,16 @@ class CameraHandTracker:
                 for attempt in range(5):
                     ret, frame = cap.read()
                     if ret and frame is not None:
-                        print(f"✅ 摄像头 {camera_index} 可用 - 分辨率: {frame.shape[1]}x{frame.shape[0]}")
+                        print(f" 摄像头 {camera_index} 可用 - 分辨率: {frame.shape[1]}x{frame.shape[0]}")
                         cap.release()
                         return camera_index
                     sleep(0.1)
                 cap.release()
-                print(f"❌ 摄像头 {camera_index} 可打开但无法读取帧")
+                print(f" 摄像头 {camera_index} 可打开但无法读取帧")
             else:
-                print(f"❌ 摄像头 {camera_index} 不可用")
+                print(f" 摄像头 {camera_index} 不可用")
         
-        print("❌ 未找到可用摄像头")
+        print(" 未找到可用摄像头")
         return None
 
     def get_all_required_points(self, hand_landmarks, hand_type):
@@ -299,13 +299,13 @@ class CameraHandTracker:
                     left_points = self.get_all_required_points(hand_landmarks, "Left")
                     all_points.extend(left_points)
                     left_hand_detected = True
-                    print("👈 检测到左手")
+                    print(" 检测到左手")
                     
                 elif hand_type == "Right" and not right_hand_detected:
                     right_points = self.get_all_required_points(hand_landmarks, "Right")
                     all_points.extend(right_points)
                     right_hand_detected = True
-                    print("👉 检测到右手")
+                    print(" 检测到右手")
             
             if not left_hand_detected:
                 all_points.extend([[0.0, 0.0]] * 6)
@@ -331,7 +331,7 @@ class CameraHandTracker:
         # 打印调试信息
         valid_points = sum(1 for p in points if p[0] != 0 or p[1] != 0)
         if valid_points > 0:
-            print(f"📤 发送 {valid_points}/12 个手部点坐标")
+            print(f" 发送 {valid_points}/12 个手部点坐标")
 
     def draw_landmarks(self, frame, points):
         h, w, _ = frame.shape
@@ -363,17 +363,17 @@ class CameraHandTracker:
         # 查找可用摄像头
         camera_index = self.find_working_camera()
         if camera_index is None:
-            print("🔄 无可用摄像头，视频流服务器继续运行（显示测试画面）")
+            print(" 无可用摄像头，视频流服务器继续运行（显示测试画面）")
             while is_running():
                 sleep(1)
             return
         
-        print(f"📷 使用摄像头索引: {camera_index}")
+        print(f" 使用摄像头索引: {camera_index}")
         
         # 打开摄像头
         cap = cv2.VideoCapture(camera_index)
         if not cap.isOpened():
-            print(f"❌ 无法打开摄像头 {camera_index}")
+            print(f" 无法打开摄像头 {camera_index}")
             return
         
         # 设置摄像头参数
@@ -381,9 +381,9 @@ class CameraHandTracker:
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         cap.set(cv2.CAP_PROP_FPS, 30)
         
-        print("🎥 开始摄像头手部追踪...")
-        print("📹 视频流地址: http://localhost:5001/video_feed")
-        print("💡 提示: 手部移动方向应该与标注点移动方向一致")
+        print(" 开始摄像头手部追踪...")
+        print(" 视频流地址: http://localhost:5001/video_feed")
+        print(" 提示: 手部移动方向应该与标注点移动方向一致")
         
         module_status_list.set_ready("Camera.py")
 
@@ -396,7 +396,7 @@ class CameraHandTracker:
             while is_running():
                 ret, frame = cap.read()
                 if not ret:
-                    print("❌ 无法读取摄像头帧")
+                    print(" 无法读取摄像头帧")
                     # 显示错误画面
                     error_frame = zeros((480, 640, 3), dtype=uint8)
                     cv2.putText(error_frame, "Camera Error", (200, 240), 
@@ -448,19 +448,19 @@ class CameraHandTracker:
                 cv2.imshow(window_name, display_frame)
                 
         except Exception as e:
-            print(f"❌ 程序错误: {e}")
+            print(f" 程序错误: {e}")
         finally:
             cap.release()
             cv2.destroyAllWindows()
             self.hands.close()
-            print("✅ 摄像头资源已释放")
+            print(" 摄像头资源已释放")
 
 if __name__ == "__main__":
-    print("🚀 启动摄像头手部追踪系统...")
+    print(" 启动摄像头手部追踪系统...")
     cp = Profiler()
     cp.start()
     tracker = CameraHandTracker()
     tracker.run()
-    print("⏹️ 摄像头手部追踪系统已停止")
+    print(" 摄像头手部追踪系统已停止")
     cp.end("Camera.prof")
     module_status_list.profile_end("Camera.py")

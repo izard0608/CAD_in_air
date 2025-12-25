@@ -29,7 +29,7 @@ class WebSocketClient {
     setupEventHandlers() {
         // 连接事件
         this.socket.on('connect', () => {
-            console.log('✅ 已连接到服务器');
+            console.log(' 已连接到服务器');
             this.isConnected = true;
             this.reconnectAttempts = 0;
             this.updateConnectionStatus('online');
@@ -37,7 +37,7 @@ class WebSocketClient {
         });
         
         this.socket.on('disconnect', () => {
-            console.log('❌ 与服务器断开连接');
+            console.log(' 与服务器断开连接');
             this.isConnected = false;
             this.updateConnectionStatus('offline');
             this.handleReconnection();
@@ -106,11 +106,11 @@ class WebSocketClient {
     
     // 在 WebSocketClient 的 emit 方法中添加
     emit(event, data) {
-        console.log(`📤 WebSocketClient 触发事件: ${event}`, data);
+        console.log(` WebSocketClient 触发事件: ${event}`, data);
         
         if (this.eventHandlers.has(event)) {
             const handlers = this.eventHandlers.get(event);
-            console.log(`📤 找到 ${handlers.length} 个处理器`);
+            console.log(` 找到 ${handlers.length} 个处理器`);
             
             handlers.forEach(handler => {
                 try {
@@ -120,7 +120,7 @@ class WebSocketClient {
                 }
             });
         } else {
-            console.log(`❌ 没有找到 ${event} 事件的处理器`);
+            console.log(` 没有找到 ${event} 事件的处理器`);
         }
     }
     

@@ -16,16 +16,16 @@ context = zmq.Context()
 # 绑定端口 - 接收摄像头和ToF数据
 camera_socket = context.socket(zmq.PULL)
 camera_socket.bind("tcp://127.0.0.1:5556")
-print("📷 摄像头端口绑定: 5556")
+print(" 摄像头端口绑定: 5556")
 
 serial_socket = context.socket(zmq.PULL)
 serial_socket.bind("tcp://127.0.0.1:5555")
-print("📡 ToF端口绑定: 5555")
+print(" ToF端口绑定: 5555")
 
 # 发送融合数据到手势识别
 sender_socket = context.socket(zmq.PUSH)
 sender_socket.bind("tcp://127.0.0.1:5557")
-print("📤 融合数据端口绑定: 5557")
+print(" 融合数据端口绑定: 5557")
 
 # 示例参数
 W, H = 8, 8
@@ -59,7 +59,7 @@ def depthgrid_to_camera_points(depth_grid, K, R, t, FoV_x, FoV_y):
         pts_cam = (R.dot(pts_ir_valid.T) + t.reshape(3,1)).T
         return pts_cam, valid
     except Exception as e:
-        print(f"❌ 深度数据转换错误: {e}")
+        print(f" 深度数据转换错误: {e}")
         return np.array([]), np.array([])
 
 def project_points(pts_cam, K):
@@ -75,7 +75,7 @@ def fuse_points_with_depth(camera_points, frame_size, pts_cam):
     fused = []
 
     if pts_cam is None or len(pts_cam) == 0:
-        print("⚠️ 无ToF点云数据，使用默认深度")
+        print(" 无ToF点云数据，使用默认深度")
         for p in camera_points:
             if not isinstance(p, (list, tuple)) or len(p) < 2:
                 fused.append([0.0, 0.0, 0.0])
@@ -123,7 +123,7 @@ def fuse_points_with_depth(camera_points, frame_size, pts_cam):
             fused.append([x_norm, y_norm, z])
             
     except Exception as e:
-        print(f"❌ 数据融合错误: {e}")
+        print(f" 数据融合错误: {e}")
         # 出错时返回带默认深度的点
         for p in camera_points:
             if not isinstance(p, (list, tuple)) or len(p) < 2:
@@ -138,7 +138,7 @@ module_status_list.set_ready("LocationCalculate.py")
 
 # print(module_status_list.ready_dict)
 
-print("🔄 开始数据融合循环...")
+print(" 开始数据融合循环...")
 
 poller = zmq.Poller()
 poller.register(camera_socket, zmq.POLLIN)
@@ -158,7 +158,7 @@ try:
         # 接收摄像头数据
         if camera_socket in socks:
             camera_data = camera_socket.recv_json()
-            print(f"📷 收到摄像头数据帧 #{frame_count}")
+            print(f" 收到摄像头数据帧 #{frame_count}")
 
         # 接收ToF数据
         if serial_socket in socks:
@@ -174,10 +174,10 @@ try:
                     depth_m, K, R, t, FoV_x, FoV_y
                 )
                 last_tof_time = time.time()
-                print(f"📊 ToF点云: {len(pts_cam) if pts_cam is not None else 0}个点")
+                print(f" ToF点云: {len(pts_cam) if pts_cam is not None else 0}个点")
                 
             except Exception as e:
-                print(f"❌ ToF数据处理错误: {e}")
+                print(f" ToF数据处理错误: {e}")
                 pts_cam = None
 
         # 数据融合处理
@@ -196,21 +196,21 @@ try:
             
             sender_socket.send_pyobj(out)
             frame_count += 1
-            print(f"📤 发送融合数据帧 #{frame_count}: {len(fused_points)}个3D点")
+            print(f" 发送融合数据帧 #{frame_count}: {len(fused_points)}个3D点")
             camera_data = None
 
         # ToF数据超时处理
         if pts_cam is not None and time.time() - last_tof_time > 3.0:
-            print("⚠️ ToF数据超时")
+            print(" ToF数据超时")
             pts_cam = None
 
 except Exception as e:
-    print(f"❌ 程序错误: {e}")
+    print(f" 程序错误: {e}")
 finally:
     camera_socket.close()
     serial_socket.close()
     sender_socket.close()
     context.term()
-    print("⏹️ 数据融合中心已停止")
+    print(" 数据融合中心已停止")
     cp.end("LocationCalculate.prof")
     module_status_list.profile_end("LocationCalculate.py")

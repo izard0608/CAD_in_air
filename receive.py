@@ -77,22 +77,22 @@ class GestureBackend:
     def setup_websocket(self):
         @self.sio.event
         def connect():
-            print("✅ 连接到Flask服务器")
+            print(" 连接到Flask服务器")
 
         @self.sio.event
         def disconnect():
-            print("❌ 与服务器断开连接")
+            print(" 与服务器断开连接")
 
     def connect(self):
         module_status = module_status_list.ready_dict["main.py"]
         module_status.wait()
-        print("⏳ 等待main.py就绪...")
+        print(" 等待main.py就绪...")
         try:
             self.sio.connect(self.server_url)
-            print("✅ WebSocket连接成功")
+            print(" WebSocket连接成功")
             return True
         except Exception as e:
-            print(f"❌ WebSocket连接失败: {e}")
+            print(f" WebSocket连接失败: {e}")
             return False
 
     def _json_safe(self, obj):
@@ -140,14 +140,14 @@ class GestureBackend:
         }
         self._history.append(payload)
         
-        print(f"📤 发送命令: {command_type}")
+        print(f" 发送命令: {command_type}")
         if self.DEBUG:
             print(f"   参数: {params}")
 
         try:
             self.sio.emit('gesture_command', payload)
         except Exception as e:
-            print(f"❌ 发送命令失败: {e}")
+            print(f" 发送命令失败: {e}")
 
     def distance(self, p1, p2):
         return math.sqrt(sum((a-b)**2 for a, b in zip(p1, p2)))
@@ -231,12 +231,12 @@ class GestureBackend:
         
         if len(points) < 12:
             if self.DEBUG and self._frame % self.LOG_EVERY_N == 0:
-                print(f"⚠️ 数据点不足: {len(points)}/12")
+                print(f" 数据点不足: {len(points)}/12")
             return
 
         if self._frame % self.LOG_EVERY_N == 0:
             valid_points = sum(1 for p in points if self.is_valid_point(p))
-            print(f"🎯 处理数据帧 #{self._frame}, 有效点: {valid_points}/12, edge_flag: {self.edge_flag}")
+            print(f" 处理数据帧 #{self._frame}, 有效点: {valid_points}/12, edge_flag: {self.edge_flag}")
             # 调试：打印前几个点的坐标范围
             if valid_points > 0:
                 rt = points[self.RIGHT_THUMB_FINGER[0]]
@@ -269,7 +269,7 @@ class GestureBackend:
                         new_node = self._mid(lt_tip, li_tip)
                         self.send_command('start_drawing_point', {'position': new_node})
                         if self._frame % self.LOG_EVERY_N == 0:
-                            print(f"✅ 左手建点成功")
+                            print(f" 左手建点成功")
                         self.left_history.clear()
 
         # 右手：简单的画线逻辑 - 拇指和食指捏合
@@ -298,7 +298,7 @@ class GestureBackend:
                             self._last_center = start_node
                             self.right_history.clear()
                             if self._frame % self.LOG_EVERY_N == 0:
-                                print(f"✅ 开始画线")
+                                print(f" 开始画线")
             else:
                 # 状态：正在画线
                 if right_dist > self.DIS_OFF:
@@ -308,7 +308,7 @@ class GestureBackend:
                     self._last_center = None
                     self.right_history.clear()
                     if self._frame % self.LOG_EVERY_N == 0:
-                        print(f"✅ 结束画线")
+                        print(f" 结束画线")
                 else:
                     # 继续捏合，更新位置
                     if (self._last_center is None or 
@@ -365,11 +365,11 @@ if __name__ == "__main__":
     backend = GestureBackend()
 
     if backend.connect():
-        print("🚀 启动实时手势识别模式...")
+        print(" 启动实时手势识别模式...")
         context = zmq.Context()
         socket = context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:5557")
-        print("✅ 连接到融合数据端口: 5557")
+        print(" 连接到融合数据端口: 5557")
 
         module_status_list.set_ready("receive.py")
         try:
@@ -378,12 +378,12 @@ if __name__ == "__main__":
                 data = socket.recv_pyobj()
                 backend.process_data(data)
         except Exception as e:
-            print(f"❌ 数据接收错误: {e}")
+            print(f" 数据接收错误: {e}")
         finally:
             socket.close()
             context.term()
-            print("⏹️ 手势识别已停止")
+            print(" 手势识别已停止")
             cp.end("receive.prof")
             module_status_list.profile_end("receive.py")
     else:
-        print("❌ 无法连接到Web服务器，请确保main.py正在运行")
+        print(" 无法连接到Web服务器，请确保main.py正在运行")

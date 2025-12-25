@@ -15,28 +15,28 @@ cp.start()
 SERIAL_PORTS = ["COM3", "COM4", "COM5", "/dev/ttyUSB0", "/dev/ttyACM0"]
 BAUD_RATE = 115200
 
-print("🔌 尝试连接串口...")
+print(" 尝试连接串口...")
 
 # 自动检测串口
 ser = None
 for port in SERIAL_PORTS:
     try:
         ser = serial.Serial(port, BAUD_RATE, timeout=1)
-        print(f"✅ 串口连接成功: {port}")
+        print(f" 串口连接成功: {port}")
         break
     except:
-        print(f"❌ 无法连接串口: {port}")
+        print(f" 无法连接串口: {port}")
 
 if ser is None:
-    print("❌ 所有串口连接失败，请检查设备连接")
+    print(" 所有串口连接失败，请检查设备连接")
 else:
-    print("🚀 SerialReceiver 启动，开始读取VL53L5CX深度数据...")
+    print(" SerialReceiver 启动，开始读取VL53L5CX深度数据...")
 
 # ZeroMQ设置
 context = zmq.Context()
 socket = context.socket(zmq.PUSH)
 socket.connect("tcp://127.0.0.1:5555")
-print("📡 连接到数据融合端口: 5555")
+print(" 连接到数据融合端口: 5555")
 
 module_status_list.set_ready("SerialReceiver.py")
 
@@ -81,7 +81,7 @@ try:
         if not valid_data or len(depth_rows) != 8:
             error_count += 1
             if error_count >= max_errors:
-                print("❌ 数据格式错误过多，请检查传感器连接")
+                print(" 数据格式错误过多，请检查传感器连接")
                 break
             continue
 
@@ -104,17 +104,17 @@ try:
         socket.send_json(packet)
         frame_count += 1
         if frame_count % 10 == 0:  # 每10帧打印一次
-            print(f"📤 发送ToF深度帧 #{frame_count}")
+            print(f" 发送ToF深度帧 #{frame_count}")
 
         time.sleep(0.01)
 
 except Exception as e:
-    print(f"❌ SerialReceiver错误: {e}")
+    print(f" SerialReceiver错误: {e}")
 finally:
     if ser:
         ser.close()
     socket.close()
     context.term()
-    print("✅ 串口资源已释放")
+    print(" 串口资源已释放")
     cp.end("SerialReceiver.prof")
     module_status_list.profile_end("SerialReceiver.py")

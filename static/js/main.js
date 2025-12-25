@@ -19,7 +19,7 @@ function mapToWorld(pos) {
 
   // 调试日志
   if (Math.random() < 0.05) {  // 5%概率打印，避免过量日志
-    console.log(`📍 坐标映射: 输入[${x.toFixed(3)}, ${y.toFixed(3)}, ${z.toFixed(3)}] → 输出[${worldX.toFixed(3)}, ${worldY.toFixed(3)}, ${worldZ.toFixed(3)}]`);
+    console.log(` 坐标映射: 输入[${x.toFixed(3)}, ${y.toFixed(3)}, ${z.toFixed(3)}] → 输出[${worldX.toFixed(3)}, ${worldY.toFixed(3)}, ${worldZ.toFixed(3)}]`);
   }
 
   return [worldX, worldY, worldZ];
@@ -44,7 +44,7 @@ class CameraManager {
     
     async startCamera() {
         try {
-            console.log('🎥 连接视频流（WebRTC）...');
+            console.log(' 连接视频流（WebRTC）...');
             
             this.videoElement = document.getElementById('camera-video');
             this.overlayElement = document.getElementById('camera-overlay');
@@ -54,7 +54,7 @@ class CameraManager {
 
 
             if (this.videoElement && this.videoElement.tagName !== 'VIDEO') {
-                console.warn(`⚠️ #camera-video 不是 <video>，而是 <${this.videoElement.tagName.toLowerCase()}>，将自动替换为 <video> 以启用 WebRTC`);
+                console.warn(` #camera-video 不是 <video>，而是 <${this.videoElement.tagName.toLowerCase()}>，将自动替换为 <video> 以启用 WebRTC`);
                 const oldEl = this.videoElement;
 
                 const newVideo = document.createElement('video');
@@ -133,12 +133,12 @@ class CameraManager {
             }
             
             this.isActive = true;
-            console.log('✅ WebRTC 视频连接已发起');
+            console.log(' WebRTC 视频连接已发起');
             
             return true;
             
         } catch (error) {
-            console.error('❌ 视频流连接失败:', error);
+            console.error(' 视频流连接失败:', error);
             this.showCameraError(error);
             return false;
         }
@@ -178,7 +178,7 @@ class CameraManager {
             this.overlayElement.style.display = 'block';
             this.overlayElement.innerHTML = `
                 <div class="overlay-text">
-                    <div>📷 视频流已停止</div>
+                    <div> 视频流已停止</div>
                     <button onclick="app.cameraManager.startCamera()" 
                             style="margin-top: 10px; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
                         重新连接
@@ -194,7 +194,7 @@ class CameraManager {
             overlay.innerHTML = `
                 <div class="overlay-text">
                     <div style="color: #ff6b6b; font-size: 1.2em; margin-bottom: 10px;">
-                        ❌ 无法连接视频流
+                         无法连接视频流
                     </div>
                     <div style="color: #ccc; margin-bottom: 15px; font-size: 0.9em;">
                         请确保 Camera.py 正在运行（5001）并已启用 WebRTC<br>
@@ -229,7 +229,7 @@ class GestureModelingApp {
     }
     
     async init() {
-        console.log('🎮 初始化手势3D建模应用...');
+        console.log(' 初始化手势3D建模应用...');
         
         // 检查后端状态
         try {
@@ -259,7 +259,7 @@ class GestureModelingApp {
             });
         }, 1000);
         
-        console.log('✅ 手势3D建模应用初始化完成');
+        console.log(' 手势3D建模应用初始化完成');
     }
     
     setupUIEvents() {
@@ -279,45 +279,45 @@ class GestureModelingApp {
         
         // 建模控制按钮
         newStartBtn.addEventListener('click', () => {
-            console.log('🟢 开始建模按钮被点击');
+            console.log(' 开始建模按钮被点击');
             this.startModeling();
         });
         
         newStopBtn.addEventListener('click', () => {
-            console.log('🔴 停止建模按钮被点击');
+            console.log(' 停止建模按钮被点击');
             this.stopModeling();
         });
         
         newResetBtn.addEventListener('click', () => {
-            console.log('🔄 重置场景按钮被点击');
+            console.log(' 重置场景按钮被点击');
             this.resetScene();
         });
     }
     
     setupWebSocketEvents() {
-        console.log('🔧 设置WebSocket事件监听');
+        console.log(' 设置WebSocket事件监听');
     
         // 连接状态事件
         this.websocketClient.on('connectionEstablished', (data) => {
-            console.log('✅ WebSocket连接已建立');
+            console.log(' WebSocket连接已建立');
             this.updateClientCount(data.connected_clients);
             this.updateConnectionStatus('online');
         });
         
         // 建模控制事件
         this.websocketClient.on('modelingStarted', (data) => {
-            console.log('🎯 收到建模开始事件:', data);
+            console.log(' 收到建模开始事件:', data);
             this.onModelingStarted(data);
         });
         
         this.websocketClient.on('modelingStopped', (data) => {
-            console.log('🎯 收到建模结束事件:', data);
+            console.log(' 收到建模结束事件:', data);
             this.onModelingStopped(data);
         });
         
         // 手势数据事件
         this.websocketClient.on('gestureUpdate', (data) => {
-            console.log('🎯 收到手势命令:', data.command);
+            console.log(' 收到手势命令:', data.command);
             this.handleGestureCommand(data);
         });
         
@@ -329,16 +329,16 @@ class GestureModelingApp {
     }
     
     async startModeling() {
-        console.log('🟢 startModeling 方法开始执行');
+        console.log(' startModeling 方法开始执行');
         
         if (this.isModeling) {
-            console.log('❌ 建模已在进行中，跳过');
+            console.log(' 建模已在进行中，跳过');
             this.showNotification('建模会话已在进行中', 'warning');
             return;
         }
         
         try {
-            console.log('📡 发送开始建模请求...');
+            console.log(' 发送开始建模请求...');
             const response = await fetch('/api/start-modeling', {
                 method: 'POST',
                 headers: {
@@ -352,17 +352,17 @@ class GestureModelingApp {
             }
             
             const data = await response.json();
-            console.log('✅ 建模会话启动成功:', data);
+            console.log(' 建模会话启动成功:', data);
             
         } catch (error) {
-            console.error('❌ 启动建模失败:', error);
+            console.error(' 启动建模失败:', error);
             this.showError('启动建模失败: ' + error.message);
         }
     }
     
     async stopModeling() {
         try {
-            console.log('📡 发送停止建模请求...');
+            console.log(' 发送停止建模请求...');
             const response = await fetch('/api/stop-modeling', {
                 method: 'POST',
                 headers: {
@@ -375,10 +375,10 @@ class GestureModelingApp {
             }
             
             const data = await response.json();
-            console.log('✅ 建模会话停止成功:', data);
+            console.log(' 建模会话停止成功:', data);
             
         } catch (error) {
-            console.error('❌ 停止建模失败:', error);
+            console.error(' 停止建模失败:', error);
             this.showError('停止建模失败: ' + error.message);
         }
     }
@@ -396,7 +396,7 @@ class GestureModelingApp {
         this.updateOperationHint('手势建模已开始，请使用手势进行3D建模操作');
         this.showNotification('建模会话已开始', 'success');
         
-        console.log('✅ 前端建模状态已更新: 开始');
+        console.log(' 前端建模状态已更新: 开始');
     }
     
     onModelingStopped(data) {
@@ -412,19 +412,19 @@ class GestureModelingApp {
         this.updateOperationHint('建模会话已结束，点击"开始建模"重新开始');
         this.showNotification('建模会话已结束', 'info');
         
-        console.log('✅ 前端建模状态已更新: 结束');
+        console.log(' 前端建模状态已更新: 结束');
     }
     
     handleGestureCommand(data) {
         if (!this.isModeling) {
-            console.log('⚠️ 收到手势命令但建模未开始');
+            console.log(' 收到手势命令但建模未开始');
             return;
         }
         
-        console.log('🟢 处理手势命令:', data.command);
+        console.log(' 处理手势命令:', data.command);
         
         if (!this.threeScene) {
-            console.error('❌ ThreeScene未初始化');
+            console.error(' ThreeScene未初始化');
             return;
         }
         
@@ -434,7 +434,7 @@ class GestureModelingApp {
 
             switch (data.command) {
                 case 'start_drawing_point':
-                    console.log('🎯 创建点:', p.position);
+                    console.log(' 创建点:', p.position);
                     this.threeScene.createPoint({
                     ...p,
                     position: mapToWorld(p.position),
@@ -442,7 +442,7 @@ class GestureModelingApp {
                     break;
 
                 case 'start_drawing_line':
-                    console.log('📏 开始画线:', p.position);
+                    console.log(' 开始画线:', p.position);
                     this.threeScene.startDrawingLine({
                     ...p,
                     position: mapToWorld(p.position),
@@ -457,7 +457,7 @@ class GestureModelingApp {
                     break;
 
                 case 'finish_drawing_line':
-                    console.log('✅ 完成画线:', p.position);
+                    console.log(' 完成画线:', p.position);
                     this.threeScene.finishDrawingLine({
                     ...p,
                     position: mapToWorld(p.position),
@@ -465,7 +465,7 @@ class GestureModelingApp {
                     break;
 
                 case 'create_plane':
-                    console.log('🟦 创建平面');
+                    console.log(' 创建平面');
                     this.threeScene.createRectangle({
                     corner1: mapToWorld(p.start_position),
                     corner2: mapToWorld(p.end_position),
@@ -479,7 +479,7 @@ class GestureModelingApp {
                     console.log('未知命令:', data.command);
                 }
             } catch (error) {
-                console.error('❌ 处理手势命令失败:', error);
+                console.error(' 处理手势命令失败:', error);
             }
     }
     
@@ -539,7 +539,7 @@ class GestureModelingApp {
     }
     
     showError(message) {
-        this.showNotification('❌ ' + message, 'error');
+        this.showNotification(' ' + message, 'error');
     }
     
     // 销毁方法

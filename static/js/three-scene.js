@@ -88,7 +88,7 @@ class ThreeScene {
      * 1. 画点功能
      */
     createPoint(parameters = {}) {
-        console.log('🎯 createPoint方法被调用，参数:', parameters);
+        console.log(' createPoint方法被调用，参数:', parameters);
         
         const {
             position = [0, 0, 0],
@@ -97,7 +97,7 @@ class ThreeScene {
             name = `point_${Date.now()}`
         } = parameters;
 
-        console.log('🎯 解析后参数:', {position, color, size, name});
+        console.log(' 解析后参数:', {position, color, size, name});
 
         // 用小球体表示点
         const geometry = new THREE.SphereGeometry(size, 16, 16);
@@ -110,8 +110,8 @@ class ThreeScene {
         this.scene.add(point);
         this.objects.set(name, point);
         
-        console.log(`✅ 创建点成功: ${name} 位置: [${position}]`);
-        console.log('✅ 场景对象数量:', this.scene.children.length);
+        console.log(` 创建点成功: ${name} 位置: [${position}]`);
+        console.log(' 场景对象数量:', this.scene.children.length);
         
         return point;
 }
@@ -183,7 +183,7 @@ class ThreeScene {
         const isZeroLength = this.startPoint && this.startPoint.position.distanceTo(endPoint) < EPS;
 
         if (isZeroLength) {
-            // ✅ 线段长度≈0：把起点改成红色，不再创建新点，避免重叠闪烁
+            //  线段长度≈0：把起点改成红色，不再创建新点，避免重叠闪烁
             if (this.startPoint.material && this.startPoint.material.color) {
                 this.startPoint.material.color.set(0xff0000);
             }
@@ -347,8 +347,8 @@ class ThreeScene {
         pHat.normalize();
     }
 
-    // 在平面内把边轴设置为“相对对角线 ±45°”
-    // a = rotate(dHat, +45°), b = rotate(dHat, -45°)
+    // 在平面内把边轴设置为“相对对角线 ±45”
+    // a = rotate(dHat, +45), b = rotate(dHat, -45)
     const cos45 = Math.SQRT1_2;  // 1/√2
     const sin45 = Math.SQRT1_2;
     const a = new THREE.Vector3().addVectors(
@@ -362,7 +362,7 @@ class ThreeScene {
 
     // 为了让对角点精确等于 c1/c2，需要：
     // center ± (w/2 * a + h/2 * b) = center ± d/2
-    // 选 θ=45° 且 w=h，可得 w = h = |d|/√2
+    // 选 θ=45 且 w=h，可得 w = h = |d|/√2
     const w = len / Math.SQRT2;
     const h = len / Math.SQRT2;
 
@@ -417,7 +417,7 @@ class ThreeScene {
     // 日志核验：c1/c2 是否被精确复原
     const v0err = v0.distanceTo(c1);
     const v2err = v2.distanceTo(c2);
-    console.log(`✅ createRectangle ok: ${name}`, {
+    console.log(` createRectangle ok: ${name}`, {
         center: center.toArray(),
         normal: n.toArray(),
         diag_len: len,
